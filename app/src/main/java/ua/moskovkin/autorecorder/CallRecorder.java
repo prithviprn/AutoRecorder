@@ -17,7 +17,7 @@ public class CallRecorder {
 
     public void startRecording() {
         mRecorder = new MediaRecorder();
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.VOICE_CALL);
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mRecorder.setOutputFile(mFilePath);
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);

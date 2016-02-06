@@ -1,5 +1,7 @@
 package ua.moskovkin.autorecorder;
 
+import android.content.Context;
+import android.content.Intent;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -13,6 +15,12 @@ public class RecorderPhoneStateListener extends PhoneStateListener {
     private boolean callReceived;
     private boolean isIncomingCall = false;
     private CallRecorder mRecorder;
+    private Context context;
+
+    public RecorderPhoneStateListener(Context context) {
+        super();
+        this.context = context;
+    }
 
     @Override
     public void onCallStateChanged(int state, String incomingNumber) {
