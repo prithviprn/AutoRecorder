@@ -25,7 +25,6 @@ public class CallRecorder {
             mRecorder.prepare();
             mRecorder.start();
         } catch (Exception e) {
-            Log.d("crash", "failed prepare or start");
             e.printStackTrace();
         }
     }
@@ -44,7 +43,7 @@ public class CallRecorder {
             mPlayer.prepare();
             mPlayer.start();
         } catch (IOException e) {
-            Log.e("crash", "prepare() failed");
+            e.printStackTrace();
         }
     }
 
