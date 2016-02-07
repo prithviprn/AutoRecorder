@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.Time;
@@ -26,6 +27,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Locale;
@@ -56,11 +58,14 @@ public class RecorderFragment extends Fragment {
     }
 
     private void updateUI() {
-        ArrayList<HashMap<String, String>> mRecorderDir = new RecordScanner().getDirList().get(recorderDirName);
-
+        ArrayList<HashMap<String, String>> mRecorderDir = new RecordScanner(getContext())
+                                                                            .getDirList()
+                                                                            .get(recorderDirName);
+        Collections.reverse(mRecorderDir);
         if (mAdapter == null) {
             mAdapter = new RecorderAdapter(mRecorderDir);
             mRecyclerView.setAdapter(mAdapter);
+            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         } else {
             mAdapter.setRecordList(mRecorderDir);
             mAdapter.notifyDataSetChanged();

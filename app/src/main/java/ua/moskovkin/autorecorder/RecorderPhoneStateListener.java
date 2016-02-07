@@ -2,6 +2,7 @@ package ua.moskovkin.autorecorder;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Environment;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -41,7 +42,10 @@ public class RecorderPhoneStateListener extends PhoneStateListener {
                     } else {
                         dirName = number;
                     }
-                    File path = new File(MainActivity.appFolder + File.separator, dirName);
+                    File path = new File(Environment.getExternalStorageDirectory()
+                            + File.separator
+                            + context.getString(R.string.app_name)
+                            + File.separator, dirName);
                     if(!path.exists()) {
                         path.mkdirs();
                     }

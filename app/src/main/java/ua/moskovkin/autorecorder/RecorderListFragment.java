@@ -56,7 +56,7 @@ public class RecorderListFragment extends Fragment {
     }
 
     private void updateUI() {
-        RecordScanner scanner = new RecordScanner();
+        RecordScanner scanner = new RecordScanner(getContext());
         Map<String, ArrayList<HashMap<String, String>>> recordBase = scanner.getDirList();
 
         if (mAdapter == null) {

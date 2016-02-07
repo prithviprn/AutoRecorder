@@ -30,10 +30,9 @@ public class CallRecorder {
     }
 
     public void stopRecording() {
-        mRecorder.stop();
-        mRecorder.reset();
-        mRecorder.release();
-        mRecorder = null;
+            mRecorder.stop();
+            mRecorder.reset();
+            mRecorder.release();
     }
 
     public void startPlaying() {

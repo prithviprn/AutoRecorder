@@ -30,7 +30,13 @@ public class CallRecorderService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        telephonyManager.listen(callListener, PhoneStateListener.LISTEN_CALL_STATE);
+        Runnable thread = new Runnable() {
+            @Override
+            public void run() {
+                telephonyManager.listen(callListener, PhoneStateListener.LISTEN_CALL_STATE);
+            }
+        };
+        thread.run();
         return super.onStartCommand(intent, flags, startId);
     }
 

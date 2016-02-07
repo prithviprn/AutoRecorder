@@ -1,5 +1,8 @@
 package ua.moskovkin.autorecorder;
 
+import android.content.Context;
+import android.os.Environment;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
@@ -8,9 +11,12 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class RecordScanner {
-    private final String MEDIA_PATH = MainActivity.appFolder.getPath();
+    private String MEDIA_PATH;
 
-    public RecordScanner() {
+    public RecordScanner(Context context) {
+        MEDIA_PATH = Environment.getExternalStorageDirectory()
+                + File.separator
+                + context.getString(R.string.app_name);
     }
 
     public TreeMap<String, ArrayList<HashMap<String, String>>> getDirList() {
