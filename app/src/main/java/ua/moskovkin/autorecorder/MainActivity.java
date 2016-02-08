@@ -38,6 +38,7 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
         if (findViewById(R.id.detail_fragment_container) == null) {
             Fragment newDetail = RecorderFragment.newInstance(contactNumber);
             getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.fragment_slide_left_start, R.anim.fragment_slide_left_end)
                     .replace(R.id.fragment_container, newDetail, "detailFragment")
                     .commit();
         } else {
@@ -53,8 +54,10 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
         FragmentManager fm = getSupportFragmentManager();
         RecorderFragment fragment = (RecorderFragment) getSupportFragmentManager().findFragmentByTag("detailFragment");
         if (fragment != null && fragment.isVisible()) {
+            RecorderListFragment recorderListFragment = new RecorderListFragment();
             fm.beginTransaction()
-                    .replace(R.id.fragment_container, new RecorderListFragment())
+                    .setCustomAnimations(R.anim.fragment_slide_right_start, R.anim.fragment_slide_right_end)
+                    .replace(R.id.fragment_container, recorderListFragment)
                     .commit();
         } else {
             super.onBackPressed();
