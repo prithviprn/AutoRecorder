@@ -17,25 +17,29 @@ public class RecorderPhoneStateListener extends PhoneStateListener {
     private boolean isIncomingCall = false;
     private CallRecorder mRecorder;
     private Context context;
+    private Intent intent;
 
-    public RecorderPhoneStateListener(Context context) {
+    public RecorderPhoneStateListener(Context context, Intent intent) {
         super();
         this.context = context;
+        this.intent = intent;
     }
 
     @Override
     public void onCallStateChanged(int state, String incomingNumber) {
+        super.onCallStateChanged(state, incomingNumber);
+        String callingNumber = intent.getStringExtra("NUMBER");
         switch (state) {
             //when incoming call
             case TelephonyManager.CALL_STATE_RINGING:
                 isIncomingCall = true;
-                Log.d("calling", "RINGING " + incomingNumber);
+                Log.d(Constants.DEBUG_TAG, "RINGING " + callingNumber);
                 break;
             //when speaking
             case TelephonyManager.CALL_STATE_OFFHOOK:
-                if(!callReceived && incomingNumber.length() > 0) {
+                if(!callReceived && callingNumber.length() > 0) {
                     callReceived = true;
-                    String number = incomingNumber.replace("+", "");
+                    String number = callingNumber.replace("+", "");
                     String dirName;
                     if (number.length() >= 7) {
                         dirName = number.substring(number.length() - 7, number.length());
@@ -56,17 +60,18 @@ public class RecorderPhoneStateListener extends PhoneStateListener {
                     mRecorder = new CallRecorder();
                     mRecorder.setFilePath(filePath);
                     mRecorder.startRecording();
-                    Log.d("calling", "OFFHOOK " + incomingNumber + " " + filePath);
+                    Log.d(Constants.DEBUG_TAG, "OFFHOOK " + callingNumber + " " + filePath);
                 }
                 break;
             //when call off
             case TelephonyManager.CALL_STATE_IDLE:
-                if (callReceived && incomingNumber.length() > 0) {
+                if (callReceived) {
                     callReceived = false;
                     mRecorder.stopRecording();
                     mRecorder = null;
                     isIncomingCall = false;
-                    Log.d("calling", "IDLE " + incomingNumber);
+                    context.stopService(new Intent(context, CallRecorderService.class));
+                    Log.d(Constants.DEBUG_TAG, "IDLE " + callingNumber);
                 }
                 break;
         }

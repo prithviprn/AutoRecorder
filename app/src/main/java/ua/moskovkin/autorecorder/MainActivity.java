@@ -1,6 +1,5 @@
 package ua.moskovkin.autorecorder;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
@@ -14,9 +13,6 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!CallRecorderService.isServiceRunning) {
-            startService(new Intent(this, CallRecorderService.class));
-        }
         appFolder = new File(Environment.getExternalStorageDirectory(), getString(R.string.app_name));
         if(!appFolder.exists()) {
             try {
