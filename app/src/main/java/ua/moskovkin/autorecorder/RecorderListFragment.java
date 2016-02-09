@@ -3,7 +3,6 @@ package ua.moskovkin.autorecorder;
 import android.app.Activity;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -70,7 +69,7 @@ public class RecorderListFragment extends Fragment {
 
     private String getContactName(final String phoneNumber)
     {
-        Uri uri = Uri.parse("content://com.android.contacts/phone_lookup");;
+        Uri uri = Uri.parse("content://com.android.contacts/phone_lookup");
         String[] projection = new String[] { "display_name" };
 
         uri = Uri.withAppendedPath(uri, Uri.encode(phoneNumber));
@@ -84,7 +83,6 @@ public class RecorderListFragment extends Fragment {
         }
 
         cursor.close();
-        cursor = null;
 
         return contactName;
     }

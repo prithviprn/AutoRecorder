@@ -1,0 +1,53 @@
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <group
+        android:id="@+id/group_1"
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/all_recordings_drawer_item"
+            android:checked="false"
+            android:title="@string/all_recordings_title" />
+
+        <item
+            android:id="@+id/incoming_drawer_item"
+            android:checked="false"
+            android:title="@string/incoming_title" />
+
+        <item
+            android:id="@+id/outgoing_drawer_item"
+            android:checked="false"
+            android:title="@string/outgoing_title" />
+
+        <item
+            android:id="@+id/by_contact_drawer_item"
+            android:checked="false"
+            android:title="@string/by_contact_title" />
+    </group>
+
+    <group
+        android:id="@+id/group_2"
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/setting_drawer_item"
+            android:checked="false"
+            android:icon="@mipmap/ic_settings"
+            android:title="@string/setting_title" />
+
+        <item
+            android:id="@+id/starred"
+            android:checked="false"
+            android:icon="@mipmap/ic_thumb_up"
+            android:title="@string/rate_app_title" />
+
+        <item
+            android:id="@+id/sent_mail"
+            android:checked="false"
+            android:icon="@mipmap/ic_share"
+            android:title="@string/share_title" />
+    </group>
+</menu>

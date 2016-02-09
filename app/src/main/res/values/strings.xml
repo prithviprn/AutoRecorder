@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">AutoRecorder</string>
+    <string name="setting_title">Setting</string>
+    <string name="rate_app_title">Rate me</string>
+    <string name="share_title">Tell a friend</string>
+    <string name="all_recordings_title">All Recordings</string>
+    <string name="incoming_title">Incoming</string>
+    <string name="outgoing_title">Outgoing</string>
+    <string name="by_contact_title">By Contact</string>
 </resources>
