@@ -4,11 +4,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.Toolbar;
 
 import java.io.File;
 
 public class MainActivity extends SingleFragmentActivity implements RecorderListFragment.Callbacks {
     public static File appFolder;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +23,8 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
                 e.printStackTrace();
             }
         }
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
 
     @Override

@@ -41,8 +41,8 @@ public class RecorderPhoneStateListener extends PhoneStateListener {
                     callReceived = true;
                     String number = callingNumber.replace("+", "");
                     String dirName;
-                    if (number.length() >= 7) {
-                        dirName = number.substring(number.length() - 7, number.length());
+                    if (number.length() >= Constants.DIR_LENGTH) {
+                        dirName = number.substring(number.length() - Constants.DIR_LENGTH, number.length());
                     } else {
                         dirName = number;
                     }
@@ -54,8 +54,7 @@ public class RecorderPhoneStateListener extends PhoneStateListener {
                         path.mkdirs();
                     }
                     Date date = new Date();
-                    String FILE_EXTENSION = ".3gp";
-                    String fileName = getFileName(date) + FILE_EXTENSION;
+                    String fileName = getFileName(date) + Constants.FILE_EXTENSION_3GP;
                     String filePath = path + File.separator + fileName;
                     mRecorder = new CallRecorder();
                     mRecorder.setFilePath(filePath);
