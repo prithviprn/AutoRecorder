@@ -77,9 +77,9 @@ public class RecorderPhoneStateListener extends PhoneStateListener {
     }
 
     private String getFileName(Date date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault());
         if (isIncomingCall) {
-            return "I" + dateFormat.format(date);
+            return dateFormat.format(date) + "I";
         }
         return dateFormat.format(date);
     }

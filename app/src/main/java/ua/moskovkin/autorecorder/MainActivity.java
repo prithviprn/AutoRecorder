@@ -5,10 +5,11 @@ import android.os.Environment;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.view.MenuItem;
 
 import java.io.File;
 
@@ -36,18 +37,53 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (NavigationView) findViewById(R.id.left_drawer);
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name, R.string.app_name) {
-
+        mDrawerList.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
+            public boolean onNavigationItemSelected(MenuItem item) {
+                int id = item.getItemId();
+                FragmentManager fm = getSupportFragmentManager();
+                switch (id) {
+                    case R.id.all_recordings_drawer_item: {
+                        AllRecorderListFragment fragment = new AllRecorderListFragment();
+                        fm.beginTransaction()
+                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                                .replace(R.id.fragment_container, fragment, "allListFragment")
+                                .commit();
+                        mDrawerLayout.closeDrawer(mDrawerList);
+                        break;
+                    }
+                    case R.id.incoming_drawer_item: {
+                        IncomingRecorderListFragment fragment = new IncomingRecorderListFragment();
+                        fm.beginTransaction()
+                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                                .replace(R.id.fragment_container, fragment, "incomingListFragment")
+                                .commit();
+                        mDrawerLayout.closeDrawer(mDrawerList);
+                        break;
+                    }
+                    case R.id.outgoing_drawer_item: {
+                        OutgoingRecorderListFragment fragment = new OutgoingRecorderListFragment();
+                        fm.beginTransaction()
+                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                                .replace(R.id.fragment_container, fragment, "outgoingListFragment")
+                                .commit();
+                        mDrawerLayout.closeDrawer(mDrawerList);
+                        break;
+                    }
+                    case R.id.by_contact_drawer_item: {
+                        RecorderListFragment fragment = new RecorderListFragment();
+                        fm.beginTransaction()
+                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                                .replace(R.id.fragment_container, fragment, "listFragment")
+                                .commit();
+                        mDrawerLayout.closeDrawer(mDrawerList);
+                        break;
+                    }
+                }
+                return true;
             }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-            }
-        };
+        });
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name, R.string.app_name);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -55,7 +91,7 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
 
     @Override
     protected Fragment createFragment() {
-        return new RecorderListFragment();
+        return new AllRecorderListFragment();
     }
 
     @Override

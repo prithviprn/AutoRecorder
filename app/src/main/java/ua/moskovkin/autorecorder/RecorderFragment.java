@@ -96,7 +96,7 @@ public class RecorderFragment extends Fragment {
             int minutes = (int) ((duration / 60) - (hours * 60));
             int seconds = (int) (duration - (hours * 3600) - (minutes * 60));
             mDurationTextView.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
-            if (singleRecordTitle.startsWith("I")) {
+            if (singleRecordTitle.endsWith("I")) {
                 mCallState.setImageResource(android.R.drawable.sym_call_incoming);
             } else {
                 mCallState.setImageResource(android.R.drawable.sym_call_outgoing);

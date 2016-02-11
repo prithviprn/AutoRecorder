@@ -67,8 +67,7 @@ public class RecorderListFragment extends Fragment {
         }
     }
 
-    private String getContactName(final String phoneNumber)
-    {
+    private String getContactName(final String phoneNumber) {
         Uri uri = Uri.parse("content://com.android.contacts/phone_lookup");
         String[] projection = new String[] { "display_name" };
 
