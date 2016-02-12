@@ -1,12 +1,12 @@
 package ua.moskovkin.autorecorder;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +27,12 @@ import java.util.TreeMap;
 public class AllRecorderListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecorderAdapter mAdapter;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(false);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -118,6 +124,7 @@ public class AllRecorderListFragment extends Fragment {
         }
 
         public void bindRecorderItem(String singleRecordTitle, String path) {
+            mPath = path;
             String[] splitedPath = path.split("/");
 
             if (!getContactImage(splitedPath[splitedPath.length - 2]).equals("")) {
@@ -145,7 +152,7 @@ public class AllRecorderListFragment extends Fragment {
             mDateTextView.setText(String.format("%02d %s, %02d:%02d:%02d",
                     calendar.get(Calendar.DAY_OF_MONTH),
                     calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault()),
-                    calendar.get(Calendar.HOUR),
+                    calendar.get(Calendar.HOUR_OF_DAY),
                     calendar.get(Calendar.MINUTE),
                     calendar.get(Calendar.SECOND)));
 
@@ -173,10 +180,16 @@ public class AllRecorderListFragment extends Fragment {
 //            String dir = getArguments().getString(ARG_RECORDER_DIR_ID);
 //            CallRecorder recorder = new CallRecorder(MainActivity.appFolder + File.separator + dir + File.separator + mRecord + ".3gp");
 //            recorder.startPlaying();
-            Uri uri = Uri.parse(mPath);
-            Intent i = new Intent(Intent.ACTION_VIEW, uri);
-            i.setDataAndType(uri,"video/3gpp");
-            startActivity(i);
+//            Uri uri = Uri.parse(mPath);
+//            Intent i = new Intent(Intent.ACTION_VIEW, uri);
+//            i.setDataAndType(uri,"video/3gpp");
+//            startActivity(i);
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            CustomAudioPlayer player = new CustomAudioPlayer();
+            player.setPath(mPath);
+            fm.beginTransaction()
+                    .setCustomAnimations(R.anim.fragment_slide_up_start,R.anim.fragment_slide_up_end)
+                    .replace(R.id.player_container, player, "player").commit();
         }
     }
 

@@ -1,116 +1,110 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<android.support.v7.widget.CardView
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_view"
+    android:layout_gravity="center"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="5dp"
-    android:paddingRight="5dp">
+    card_view:cardCornerRadius="0dp"
+    android:layout_marginTop="3dp"
+    android:layout_marginBottom="3dp"
+    android:layout_marginLeft="3dp"
+    android:layout_marginRight="3dp">
 
-    <android.support.v7.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/card_view"
-        android:layout_gravity="center"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:cardCornerRadius="0dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp">
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/contact_image_view"
+                android:src="@drawable/contacts_icon" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.9">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/recorder_list_item"
+                android:textSize="20sp"
+                android:text="I20160812235923"
+                android:layout_weight="1"
+                android:gravity="bottom|start" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/call_state_icon"
+                    android:src="@android:drawable/stat_sys_phone_call_forward"
+                    android:layout_weight="7"
+                    android:adjustViewBounds="false" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="12 jul, 15:45"
+                    android:id="@+id/date_text_view"
+                    android:layout_weight="1"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="4dp" />
+            </LinearLayout>
+
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp">
+            android:orientation="vertical"
+            android:layout_weight="1.4">
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
+            <ImageView
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1.5">
+                android:id="@+id/delete_image_view"
+                android:src="@drawable/ic_delete"
+                android:layout_gravity="right" />
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/contact_image_view"
-                    android:src="@drawable/contacts_icon" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.9">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/recorder_list_item"
-                    android:textSize="20sp"
-                    android:text="I20160812235923"
-                    android:layout_weight="1"
-                    android:gravity="bottom|start" />
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/call_state_icon"
-                        android:src="@android:drawable/stat_sys_phone_call_forward"
-                        android:layout_weight="7"
-                        android:adjustViewBounds="false" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="12 jul, 15:45"
-                        android:id="@+id/date_text_view"
-                        android:layout_weight="1"
-                        android:paddingLeft="5dp"
-                        android:paddingTop="4dp" />
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="1.4">
+                android:text="23:59:59"
+                android:id="@+id/duration_text_view"
+                android:textSize="12sp"
+                android:gravity="right"
+                android:paddingRight="8dp" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:id="@+id/menu_image_view"
-                    android:src="@drawable/ic_more"
-                    android:layout_gravity="right" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="23:59:59"
-                    android:id="@+id/duration_text_view"
-                    android:textSize="12sp"
-                    android:gravity="right"
-                    android:paddingRight="8dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="25 kB"
-                    android:id="@+id/file_size_text_view"
-                    android:textSize="12sp"
-                    android:gravity="right"
-                    android:paddingRight="8dp" />
-
-            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="25 kB"
+                android:id="@+id/file_size_text_view"
+                android:textSize="12sp"
+                android:gravity="right"
+                android:paddingRight="8dp" />
 
         </LinearLayout>
 
-    </android.support.v7.widget.CardView>
+    </LinearLayout>
 
-</LinearLayout>
+</android.support.v7.widget.CardView>

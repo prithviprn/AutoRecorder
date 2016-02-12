@@ -45,6 +45,9 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
                 switch (id) {
                     case R.id.all_recordings_drawer_item: {
                         AllRecorderListFragment fragment = new AllRecorderListFragment();
+                        if (fm.findFragmentByTag("player") != null) {
+                            fm.beginTransaction().hide(fm.findFragmentByTag("player")).commit();
+                        }
                         fm.beginTransaction()
                                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                                 .replace(R.id.fragment_container, fragment, "allListFragment")
@@ -54,6 +57,9 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
                     }
                     case R.id.incoming_drawer_item: {
                         IncomingRecorderListFragment fragment = new IncomingRecorderListFragment();
+                        if (fm.findFragmentByTag("player") != null) {
+                            fm.beginTransaction().hide(fm.findFragmentByTag("player")).commit();
+                        }
                         fm.beginTransaction()
                                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                                 .replace(R.id.fragment_container, fragment, "incomingListFragment")
@@ -63,6 +69,9 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
                     }
                     case R.id.outgoing_drawer_item: {
                         OutgoingRecorderListFragment fragment = new OutgoingRecorderListFragment();
+                        if (fm.findFragmentByTag("player") != null) {
+                            fm.beginTransaction().hide(fm.findFragmentByTag("player")).commit();
+                        }
                         fm.beginTransaction()
                                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                                 .replace(R.id.fragment_container, fragment, "outgoingListFragment")

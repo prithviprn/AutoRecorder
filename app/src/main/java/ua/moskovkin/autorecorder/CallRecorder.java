@@ -2,9 +2,6 @@ package ua.moskovkin.autorecorder;
 
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.util.Log;
-
-import java.io.IOException;
 
 public class CallRecorder {
     private MediaRecorder mRecorder = null;
@@ -35,23 +32,8 @@ public class CallRecorder {
             mRecorder.release();
     }
 
-    public void startPlaying() {
-        mPlayer = new MediaPlayer();
-        try {
-            mPlayer.setDataSource(mFilePath);
-            mPlayer.prepare();
-            mPlayer.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void stopPlaying() {
-        mPlayer.release();
-        mPlayer = null;
-    }
-
     public void setFilePath(String mFilePath) {
         this.mFilePath = mFilePath;
     }
+
 }
