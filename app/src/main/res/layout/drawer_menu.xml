@@ -49,5 +49,11 @@
             android:checked="false"
             android:icon="@mipmap/ic_share"
             android:title="@string/share_title" />
+
+        <item
+            android:id="@+id/exit"
+            android:checked="false"
+            android:icon="@drawable/ic_exit"
+            android:title="@string/close_app" />
     </group>
 </menu>

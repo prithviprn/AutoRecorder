@@ -79,6 +79,10 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
                         mDrawerLayout.closeDrawer(mDrawerList);
                         break;
                     }
+                    case R.id.exit: {
+                        finish();
+                        break;
+                    }
                 }
                 return true;
             }

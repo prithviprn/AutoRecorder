@@ -7,4 +7,6 @@
     <string name="incoming_title">Incoming</string>
     <string name="outgoing_title">Outgoing</string>
     <string name="by_contact_title">By Contact</string>
+    <string name="close_app">Exit</string>
+    <string name="action_recording_text">Recording...</string>
 </resources>
