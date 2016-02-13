@@ -171,7 +171,7 @@ public class OutgoingRecorderListFragment extends Fragment {
 
             File file = new File(path);
             String fileSize = String.valueOf(file.length()/1024);
-            mFileSIzeTextView.setText(fileSize + " kB");
+            mFileSIzeTextView.setText(String.format("%s kB", fileSize));
         }
 
         @Override

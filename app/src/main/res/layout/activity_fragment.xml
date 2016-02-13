@@ -23,7 +23,6 @@
             android:id="@+id/player_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             app:layout_anchor="@id/fragment_container"
             app:layout_anchorGravity="bottom"
             app:layout_scrollFlags="scroll|enterAlways"/>

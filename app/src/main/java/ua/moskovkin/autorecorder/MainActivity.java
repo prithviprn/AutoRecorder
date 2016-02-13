@@ -1,5 +1,6 @@
 package ua.moskovkin.autorecorder;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.NavigationView;
@@ -10,20 +11,27 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.ToggleButton;
 
 import java.io.File;
 
 public class MainActivity extends SingleFragmentActivity implements RecorderListFragment.Callbacks {
     public static File appFolder;
     private Toolbar toolbar;
+    private ToggleButton mToggleButton;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private NavigationView mDrawerList;
+    private View drawerHeader;
     private FragmentManager fm;
+    private SharedPreferences settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        settings = getSharedPreferences(Constants.SETTINGS, MODE_PRIVATE);
         fm = getSupportFragmentManager();
         appFolder = new File(Environment.getExternalStorageDirectory(), getString(R.string.app_name));
         if(!appFolder.exists()) {
@@ -47,6 +55,9 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
                     fm.beginTransaction().remove(fm.findFragmentByTag("player")).commit();
                 }
                 switch (id) {
+                    case R.id.on_off_recording_toggle_button: {
+
+                    }
                     case R.id.all_recordings_drawer_item: {
                         replaceRecorderListFragment(new AllRecorderListFragment(), "allListFragment");
                         break;
@@ -73,6 +84,15 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
         });
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name, R.string.app_name);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+        drawerHeader = mDrawerList.getHeaderView(0);
+        mToggleButton = (ToggleButton) drawerHeader.findViewById(R.id.on_off_recording_toggle_button);
+        mToggleButton.setChecked(settings.getBoolean(Constants.IS_RECORDING_ON, false));
+        mToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                settings.edit().putBoolean(Constants.IS_RECORDING_ON, isChecked).commit();
+            }
+        });
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
