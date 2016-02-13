@@ -19,10 +19,12 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private NavigationView mDrawerList;
+    private FragmentManager fm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fm = getSupportFragmentManager();
         appFolder = new File(Environment.getExternalStorageDirectory(), getString(R.string.app_name));
         if(!appFolder.exists()) {
             try {
@@ -41,51 +43,24 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
                 int id = item.getItemId();
-                FragmentManager fm = getSupportFragmentManager();
+                if (fm.findFragmentByTag("player") != null) {
+                    fm.beginTransaction().remove(fm.findFragmentByTag("player")).commit();
+                }
                 switch (id) {
                     case R.id.all_recordings_drawer_item: {
-                        AllRecorderListFragment fragment = new AllRecorderListFragment();
-                        if (fm.findFragmentByTag("player") != null) {
-                            fm.beginTransaction().hide(fm.findFragmentByTag("player")).commit();
-                        }
-                        fm.beginTransaction()
-                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                                .replace(R.id.fragment_container, fragment, "allListFragment")
-                                .commit();
-                        mDrawerLayout.closeDrawer(mDrawerList);
+                        replaceRecorderListFragment(new AllRecorderListFragment(), "allListFragment");
                         break;
                     }
                     case R.id.incoming_drawer_item: {
-                        IncomingRecorderListFragment fragment = new IncomingRecorderListFragment();
-                        if (fm.findFragmentByTag("player") != null) {
-                            fm.beginTransaction().hide(fm.findFragmentByTag("player")).commit();
-                        }
-                        fm.beginTransaction()
-                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                                .replace(R.id.fragment_container, fragment, "incomingListFragment")
-                                .commit();
-                        mDrawerLayout.closeDrawer(mDrawerList);
+                        replaceRecorderListFragment(new IncomingRecorderListFragment(), "incomingListFragment");
                         break;
                     }
                     case R.id.outgoing_drawer_item: {
-                        OutgoingRecorderListFragment fragment = new OutgoingRecorderListFragment();
-                        if (fm.findFragmentByTag("player") != null) {
-                            fm.beginTransaction().hide(fm.findFragmentByTag("player")).commit();
-                        }
-                        fm.beginTransaction()
-                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                                .replace(R.id.fragment_container, fragment, "outgoingListFragment")
-                                .commit();
-                        mDrawerLayout.closeDrawer(mDrawerList);
+                        replaceRecorderListFragment(new OutgoingRecorderListFragment(), "outgoingListFragment");
                         break;
                     }
                     case R.id.by_contact_drawer_item: {
-                        RecorderListFragment fragment = new RecorderListFragment();
-                        fm.beginTransaction()
-                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                                .replace(R.id.fragment_container, fragment, "listFragment")
-                                .commit();
-                        mDrawerLayout.closeDrawer(mDrawerList);
+                        replaceRecorderListFragment(new RecorderListFragment(), "contactsListFragment");
                         break;
                     }
                     case R.id.exit: {
@@ -143,5 +118,13 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void replaceRecorderListFragment(Fragment fragment, String tag) {
+        fm.beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .replace(R.id.fragment_container, fragment, tag)
+                .commit();
+        mDrawerLayout.closeDrawer(mDrawerList);
     }
 }
