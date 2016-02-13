@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import java.io.File;
@@ -21,6 +22,7 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
     public static File appFolder;
     private Toolbar toolbar;
     private ToggleButton mToggleButton;
+    private TextView mToggleStatusTextView;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private NavigationView mDrawerList;
@@ -85,14 +87,25 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name, R.string.app_name);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         drawerHeader = mDrawerList.getHeaderView(0);
+        mToggleStatusTextView = (TextView) drawerHeader.findViewById(R.id.toggle_status_text_view);
         mToggleButton = (ToggleButton) drawerHeader.findViewById(R.id.on_off_recording_toggle_button);
         mToggleButton.setChecked(settings.getBoolean(Constants.IS_RECORDING_ON, false));
         mToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 settings.edit().putBoolean(Constants.IS_RECORDING_ON, isChecked).commit();
+                if (isChecked) {
+                    mToggleStatusTextView.setText(R.string.enabled);
+                } else {
+                    mToggleStatusTextView.setText(R.string.disabled);
+                }
             }
         });
+        if (mToggleButton.isChecked()) {
+            mToggleStatusTextView.setText(R.string.enabled);
+        } else {
+            mToggleStatusTextView.setText(R.string.disabled);
+        }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
