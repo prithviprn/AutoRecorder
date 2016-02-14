@@ -1,4 +1,4 @@
-package ua.moskovkin.autorecorder;
+package ua.moskovkin.autorecorder.utils;
 
 import android.app.NotificationManager;
 import android.content.Context;
@@ -13,6 +13,10 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import ua.moskovkin.autorecorder.Constants;
+import ua.moskovkin.autorecorder.R;
+import ua.moskovkin.autorecorder.service.CallRecorderService;
 
 public class RecorderPhoneStateListener extends PhoneStateListener {
     private boolean callReceived;

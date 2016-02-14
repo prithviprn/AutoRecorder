@@ -1,4 +1,4 @@
-package ua.moskovkin.autorecorder;
+package ua.moskovkin.autorecorder.fragments;
 
 import android.app.Activity;
 import android.database.Cursor;
@@ -15,6 +15,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import ua.moskovkin.autorecorder.R;
+import ua.moskovkin.autorecorder.utils.RecordScanner;
 
 public class RecorderListFragment extends Fragment {
     private RecyclerView mRecyclerView;

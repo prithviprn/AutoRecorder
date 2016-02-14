@@ -1,4 +1,4 @@
-package ua.moskovkin.autorecorder;
+package ua.moskovkin.autorecorder.fragments;
 
 import android.database.Cursor;
 import android.media.MediaMetadataRetriever;
@@ -24,7 +24,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class IncomingRecorderListFragment extends Fragment {
+import ua.moskovkin.autorecorder.R;
+import ua.moskovkin.autorecorder.utils.RecordScanner;
+
+public class OutgoingRecorderListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecorderAdapter mAdapter;
 
@@ -196,7 +199,7 @@ public class IncomingRecorderListFragment extends Fragment {
             for(Map.Entry<String,String> entry : allRecords.entrySet()) {
                 String key = entry.getKey();
                 String value = entry.getValue();
-                if (key.contains("I")) {
+                if (!key.contains("I")) {
                     recordNames.add(key);
                     recordPath.add(value);
                 }

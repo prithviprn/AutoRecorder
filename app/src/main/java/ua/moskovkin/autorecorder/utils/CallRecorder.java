@@ -1,4 +1,4 @@
-package ua.moskovkin.autorecorder;
+package ua.moskovkin.autorecorder.utils;
 
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;

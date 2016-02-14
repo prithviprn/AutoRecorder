@@ -1,4 +1,4 @@
-package ua.moskovkin.autorecorder;
+package ua.moskovkin.autorecorder.service;
 
 import android.app.Service;
 import android.content.Context;
@@ -9,6 +9,9 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.mediatek.telephony.TelephonyManagerEx;
+
+import ua.moskovkin.autorecorder.Constants;
+import ua.moskovkin.autorecorder.utils.RecorderPhoneStateListener;
 
 public class CallRecorderService extends Service {
     private static RecorderPhoneStateListener callListener0;

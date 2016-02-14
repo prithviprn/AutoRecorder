@@ -18,6 +18,12 @@ import android.widget.ToggleButton;
 
 import java.io.File;
 
+import ua.moskovkin.autorecorder.fragments.AllRecorderListFragment;
+import ua.moskovkin.autorecorder.fragments.IncomingRecorderListFragment;
+import ua.moskovkin.autorecorder.fragments.OutgoingRecorderListFragment;
+import ua.moskovkin.autorecorder.fragments.RecorderFragment;
+import ua.moskovkin.autorecorder.fragments.RecorderListFragment;
+
 public class MainActivity extends SingleFragmentActivity implements RecorderListFragment.Callbacks {
     public static File appFolder;
     private Toolbar toolbar;

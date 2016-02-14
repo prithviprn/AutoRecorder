@@ -1,4 +1,4 @@
-package ua.moskovkin.autorecorder;
+package ua.moskovkin.autorecorder.fragments;
 
 import android.content.Intent;
 import android.media.MediaMetadataRetriever;
@@ -18,6 +18,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+
+import ua.moskovkin.autorecorder.R;
+import ua.moskovkin.autorecorder.utils.RecordScanner;
 
 public class RecorderFragment extends Fragment {
     private static final String ARG_RECORDER_DIR_ID = "recorder_dir_id";

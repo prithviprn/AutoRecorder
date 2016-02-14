@@ -1,4 +1,4 @@
-package ua.moskovkin.autorecorder;
+package ua.moskovkin.autorecorder.fragments;
 
 import android.database.Cursor;
 import android.media.MediaMetadataRetriever;
@@ -24,14 +24,17 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class AllRecorderListFragment extends Fragment {
+import ua.moskovkin.autorecorder.R;
+import ua.moskovkin.autorecorder.utils.RecordScanner;
+
+public class IncomingRecorderListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecorderAdapter mAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(false);
+        setRetainInstance(true);
     }
 
     @Override
@@ -124,7 +127,6 @@ public class AllRecorderListFragment extends Fragment {
         }
 
         public void bindRecorderItem(String singleRecordTitle, String path) {
-            mPath = path;
             String[] splitedPath = path.split("/");
 
             if (!getContactImage(splitedPath[splitedPath.length - 2]).equals("")) {
@@ -177,18 +179,11 @@ public class AllRecorderListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-//            String dir = getArguments().getString(ARG_RECORDER_DIR_ID);
-//            CallRecorder recorder = new CallRecorder(MainActivity.appFolder + File.separator + dir + File.separator + mRecord + ".3gp");
-//            recorder.startPlaying();
-//            Uri uri = Uri.parse(mPath);
-//            Intent i = new Intent(Intent.ACTION_VIEW, uri);
-//            i.setDataAndType(uri,"video/3gpp");
-//            startActivity(i);
             FragmentManager fm = getActivity().getSupportFragmentManager();
             CustomAudioPlayer player = new CustomAudioPlayer();
             player.setPath(mPath);
             fm.beginTransaction()
-                    .setCustomAnimations(R.anim.fragment_slide_up_start,R.anim.fragment_slide_up_end)
+                    .setCustomAnimations(R.anim.fragment_slide_up_start, R.anim.fragment_slide_up_end)
                     .replace(R.id.player_container, player, "player").commit();
         }
     }
@@ -204,8 +199,10 @@ public class AllRecorderListFragment extends Fragment {
             for(Map.Entry<String,String> entry : allRecords.entrySet()) {
                 String key = entry.getKey();
                 String value = entry.getValue();
-                recordNames.add(key);
-                recordPath.add(value);
+                if (key.contains("I")) {
+                    recordNames.add(key);
+                    recordPath.add(value);
+                }
             }
         }
 
@@ -226,7 +223,7 @@ public class AllRecorderListFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return allRecords.size();
+            return recordNames.size();
         }
 
         public void setRecordList(TreeMap<String, String> allRecords) {

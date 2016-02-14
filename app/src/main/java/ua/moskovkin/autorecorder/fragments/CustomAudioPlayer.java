@@ -1,4 +1,4 @@
-package ua.moskovkin.autorecorder;
+package ua.moskovkin.autorecorder.fragments;
 
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import ua.moskovkin.autorecorder.R;
 
 public class CustomAudioPlayer extends Fragment {
     private String path;

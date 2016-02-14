@@ -1,4 +1,4 @@
-package ua.moskovkin.autorecorder;
+package ua.moskovkin.autorecorder.utils;
 
 import android.content.Context;
 import android.os.Environment;
@@ -8,6 +8,8 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
+
+import ua.moskovkin.autorecorder.R;
 
 public class RecordScanner {
     private String MEDIA_PATH;
