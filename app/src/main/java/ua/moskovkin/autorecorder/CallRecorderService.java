@@ -25,7 +25,11 @@ public class CallRecorderService extends Service {
         isServiceRunning = true;
         isDualSim = false;
         telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-        mtkManager0 = null;
+        try {
+            mtkManager0 = new TelephonyManagerEx(this);
+        } catch (Exception e) {
+            mtkManager0 = null;
+        }
         Log.d(Constants.DEBUG_TAG, "Service Created");
     }
 
@@ -45,6 +49,7 @@ public class CallRecorderService extends Service {
             try {
                 mtkManager0 = new TelephonyManagerEx(this);
                 mtkManager1 = new TelephonyManagerEx(this);
+                callListener0 = new RecorderPhoneStateListener(this, intent);
                 callListener1 = new RecorderPhoneStateListener(this, intent);
             } catch (Exception e) {
                 e.printStackTrace();
