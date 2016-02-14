@@ -15,6 +15,8 @@ public class CallRecorderBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, Intent intent) {
+        String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
+        Log.d(Constants.DEBUG_TAG, state + " state");
         setting = context.getSharedPreferences(Constants.SETTINGS, Context.MODE_PRIVATE);
         if (setting.getBoolean(Constants.IS_RECORDING_ON, false)) {
             Intent serviceIntent = new Intent(context, CallRecorderService.class);

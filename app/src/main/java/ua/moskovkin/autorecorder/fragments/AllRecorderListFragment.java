@@ -46,6 +46,7 @@ public class AllRecorderListFragment extends Fragment {
         mLayout.setReverseLayout(true);
         mLayout.setStackFromEnd(true);
         mRecyclerView.setLayoutManager(mLayout);
+        mRecyclerView.setHasFixedSize(true);
 
         updateUI();
 
@@ -133,6 +134,8 @@ public class AllRecorderListFragment extends Fragment {
             if (!getContactImage(splitedPath[splitedPath.length - 2]).equals("")) {
                 Uri uri = Uri.parse(getContactImage(splitedPath[splitedPath.length - 2]));
                 mContactImage.setImageURI(uri);
+            } else {
+                mContactImage.setImageResource(R.drawable.contacts_icon);
             }
 
             Calendar calendar = new GregorianCalendar(
