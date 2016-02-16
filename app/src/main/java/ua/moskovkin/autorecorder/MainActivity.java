@@ -1,8 +1,10 @@
 package ua.moskovkin.autorecorder;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,6 +25,7 @@ import ua.moskovkin.autorecorder.fragments.IncomingRecorderListFragment;
 import ua.moskovkin.autorecorder.fragments.OutgoingRecorderListFragment;
 import ua.moskovkin.autorecorder.fragments.RecorderFragment;
 import ua.moskovkin.autorecorder.fragments.RecorderListFragment;
+import ua.moskovkin.autorecorder.preference.SettingActivity;
 
 public class MainActivity extends SingleFragmentActivity implements RecorderListFragment.Callbacks {
     public static File appFolder;
@@ -39,7 +42,7 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        settings = getSharedPreferences(Constants.SETTINGS, MODE_PRIVATE);
+        settings = PreferenceManager.getDefaultSharedPreferences(this);
         fm = getSupportFragmentManager();
         appFolder = new File(Environment.getExternalStorageDirectory(), getString(R.string.app_name));
         if(!appFolder.exists()) {
@@ -81,6 +84,9 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
                     case R.id.by_contact_drawer_item: {
                         replaceRecorderListFragment(new RecorderListFragment(), "contactsListFragment");
                         break;
+                    }
+                    case R.id.settings: {
+                        startActivity(new Intent(getApplicationContext(), SettingActivity.class));
                     }
                     case R.id.exit: {
                         finish();

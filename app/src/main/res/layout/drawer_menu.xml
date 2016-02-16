@@ -33,19 +33,19 @@
         android:checkableBehavior="single">
 
         <item
-            android:id="@+id/setting_drawer_item"
+            android:id="@+id/settings"
             android:checked="false"
             android:icon="@mipmap/ic_settings"
             android:title="@string/setting_title" />
 
         <item
-            android:id="@+id/starred"
+            android:id="@+id/rate_me"
             android:checked="false"
             android:icon="@mipmap/ic_thumb_up"
             android:title="@string/rate_app_title" />
 
         <item
-            android:id="@+id/sent_mail"
+            android:id="@+id/share"
             android:checked="false"
             android:icon="@mipmap/ic_share"
             android:title="@string/share_title" />

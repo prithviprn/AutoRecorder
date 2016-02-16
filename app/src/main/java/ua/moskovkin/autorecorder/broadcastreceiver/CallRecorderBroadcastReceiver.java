@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -15,9 +16,7 @@ public class CallRecorderBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, Intent intent) {
-        String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
-        Log.d(Constants.DEBUG_TAG, state + " state");
-        setting = context.getSharedPreferences(Constants.SETTINGS, Context.MODE_PRIVATE);
+        setting = PreferenceManager.getDefaultSharedPreferences(context);
         if (setting.getBoolean(Constants.IS_RECORDING_ON, false)) {
             Intent serviceIntent = new Intent(context, CallRecorderService.class);
             if (intent.getAction().equals("android.intent.action.NEW_OUTGOING_CALL")) {

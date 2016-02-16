@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:key="audio_source"
+        android:title="Source"
+        android:dialogTitle="Select source"
+        android:entries="@array/pref_audio_source_type"
+        android:entryValues="@array/values_source_type"
+        android:defaultValue="1"
+        android:summary="%s"/>
+
+    <ListPreference
+        android:key="audio_format"
+        android:title="Audio Format"
+        android:dialogTitle="Select Audio Format"
+        android:entries="@array/pref_audio_source_format"
+        android:entryValues="@array/values_source_format"
+        android:defaultValue="1"
+        android:summary="%s"/>
+</PreferenceScreen>

@@ -66,7 +66,7 @@ public class RecordScanner {
 
     class FileExtensionFilter implements FilenameFilter {
         public boolean accept(File dir, String name) {
-            return (name.endsWith(".3gp") || name.endsWith(".3GP"));
+            return (name.contains("."));
         }
     }
 }

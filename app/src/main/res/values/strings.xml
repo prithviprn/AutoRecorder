@@ -11,4 +11,6 @@
     <string name="action_recording_text">Recording…</string>
     <string name="enabled">Enabled</string>
     <string name="disabled">Disabled</string>
+    <string name="general_settings">General</string>
+    <string name="recording_settings">Recording</string>
 </resources>
