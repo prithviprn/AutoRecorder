@@ -3,7 +3,6 @@ package ua.moskovkin.autorecorder;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -13,7 +12,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -31,6 +29,7 @@ import ua.moskovkin.autorecorder.preference.SettingActivity;
 
 public class MainActivity extends SingleFragmentActivity implements RecorderListFragment.Callbacks {
     public static File appFolder;
+    private File appFolderEx;
     private Toolbar toolbar;
     private ToggleButton mToggleButton;
     private TextView mToggleStatusTextView;
@@ -44,13 +43,23 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        File[] dirs = ContextCompat.getExternalFilesDirs(this, null);
-        if (dirs.length > 1) {
-            Log.d(Constants.DEBUG_TAG, "paths is " + dirs[0].toString() + " | " + dirs[1].toString());
-        }
         settings = PreferenceManager.getDefaultSharedPreferences(this);
         fm = getSupportFragmentManager();
-        appFolder = new File(Environment.getExternalStorageDirectory(), getString(R.string.app_name));
+        File[] dirs = ContextCompat.getExternalFilesDirs(this, null);
+        if (dirs.length > 1) {
+            appFolder = new File(dirs[0], getString(R.string.app_name));
+            appFolderEx = new File(dirs[1], getString(R.string.app_name));
+            if(!appFolder.exists()) {
+                try {
+                    appFolder.mkdirs();
+                    appFolderEx.mkdirs();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            appFolder = new File(dirs[0], getString(R.string.app_name));
+        }
         if(!appFolder.exists()) {
             try {
                 appFolder.mkdirs();

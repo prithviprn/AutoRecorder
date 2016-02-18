@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <SwitchPreference
+        android:title="Save On SD Card"
+        android:key="save_on_sd"/>
+
     <ListPreference
         android:key="audio_source"
         android:title="Source"

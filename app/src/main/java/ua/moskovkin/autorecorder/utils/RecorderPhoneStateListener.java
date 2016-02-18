@@ -5,10 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaMetadataRetriever;
-import android.os.Environment;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -32,8 +31,7 @@ public class RecorderPhoneStateListener extends PhoneStateListener {
     private Context context;
     private Intent intent;
     private MediaMetadataRetriever mmr;
-    private Handler handler;
-    private TelephonyManager telephonyManager;
+    private File[] dirs;
 
     public RecorderPhoneStateListener(Context context, Intent intent) {
         super();
@@ -42,7 +40,7 @@ public class RecorderPhoneStateListener extends PhoneStateListener {
         settings = PreferenceManager.getDefaultSharedPreferences(context);
         minDuration = Long.parseLong(settings.getString("record_duration", Constants.MIN_DURATION));
         mmr = new MediaMetadataRetriever();
-        telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        dirs = ContextCompat.getExternalFilesDirs(context, null);
     }
 
     @Override
@@ -67,10 +65,12 @@ public class RecorderPhoneStateListener extends PhoneStateListener {
                     } else {
                         dirName = number;
                     }
-                    File path = new File(Environment.getExternalStorageDirectory()
-                            + File.separator
-                            + context.getString(R.string.app_name)
-                            + File.separator, dirName);
+                    File path = null;
+                    if (settings.getBoolean("save_on_sd", false)) {
+                        path = new File(dirs[1] + File.separator + context.getString(R.string.app_name), dirName);
+                    } else {
+                        path = new File(dirs[0] + File.separator + context.getString(R.string.app_name), dirName);
+                    }
                     if(!path.exists()) {
                         path.mkdirs();
                     }
@@ -81,31 +81,22 @@ public class RecorderPhoneStateListener extends PhoneStateListener {
                     mRecorder.setFilePath(filePath);
                     mRecorder.startRecording();
                     Log.d(Constants.DEBUG_TAG, "OFFHOOK " + callingNumber + " " + filePath);
-                    handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (telephonyManager.getCallState() == TelephonyManager.CALL_STATE_OFFHOOK) {
-                                handler.postDelayed(this, 1000);
-                            } else {
-                                if (callReceived) {
-                                    callReceived = false;
-                                    mRecorder.stopRecording();
-                                    mmr.setDataSource(mRecorder.getFilePath());
-                                    long duration = Long.parseLong(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)) / 1000;
-                                    if (duration <= minDuration) {
-                                        File file = new File(mRecorder.getFilePath());
-                                        file.delete();
-                                    }
-                                    mRecorder = null;
-                                    isIncomingCall = false;
-                                    hideRecordingIcon();
-                                    context.stopService(new Intent(context, CallRecorderService.class));
-                                    Log.d(Constants.DEBUG_TAG, "IDLE " + callingNumber);
-                                }
-                            }
-                        }
-                    }, 1000);
+                }
+                break;
+            case TelephonyManager.CALL_STATE_IDLE:
+                if (callReceived) {
+                    hideRecordingIcon();
+                    callReceived = false;
+                    mRecorder.stopRecording();
+                    mmr.setDataSource(mRecorder.getFilePath());
+                    long duration = Long.parseLong(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)) / 1000;
+                    if (duration <= minDuration) {
+                        File file = new File(mRecorder.getFilePath());
+                        file.delete();
+                    }
+                    mRecorder = null;
+                    isIncomingCall = false;
+                    context.stopService(new Intent(context, CallRecorderService.class));
                 }
                 break;
         }
