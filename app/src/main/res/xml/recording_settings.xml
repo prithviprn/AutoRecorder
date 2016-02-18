@@ -18,4 +18,8 @@
         android:entryValues="@array/values_source_format"
         android:defaultValue="1"
         android:summary="%s"/>
+
+    <EditTextPreference android:title="Min Recording Duration"
+        android:key="record_duration"
+        android:summary="Records shorter than this duration in seconds will be deleted"/>
 </PreferenceScreen>

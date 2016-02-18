@@ -4,7 +4,9 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaMetadataRetriever;
 import android.os.Environment;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.PhoneStateListener;
@@ -24,22 +26,29 @@ public class RecorderPhoneStateListener extends PhoneStateListener {
     private boolean callReceived;
     private boolean isIncomingCall = false;
     private int notificationId = 1015;
+    private long minDuration;
     private CallRecorder mRecorder;
     private SharedPreferences settings;
     private Context context;
     private Intent intent;
+    private MediaMetadataRetriever mmr;
+    private Handler handler;
+    private TelephonyManager telephonyManager;
 
     public RecorderPhoneStateListener(Context context, Intent intent) {
         super();
         this.context = context;
         this.intent = intent;
         settings = PreferenceManager.getDefaultSharedPreferences(context);
+        minDuration = Long.parseLong(settings.getString("record_duration", Constants.MIN_DURATION));
+        mmr = new MediaMetadataRetriever();
+        telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
     }
 
     @Override
     public void onCallStateChanged(int state, String incomingNumber) {
         super.onCallStateChanged(state, incomingNumber);
-        String callingNumber = intent.getStringExtra("NUMBER");
+        final String callingNumber = intent.getStringExtra("NUMBER");
         switch (state) {
             //when incoming call
             case TelephonyManager.CALL_STATE_RINGING:
@@ -72,18 +81,31 @@ public class RecorderPhoneStateListener extends PhoneStateListener {
                     mRecorder.setFilePath(filePath);
                     mRecorder.startRecording();
                     Log.d(Constants.DEBUG_TAG, "OFFHOOK " + callingNumber + " " + filePath);
-                }
-                break;
-            //when call off
-            case TelephonyManager.CALL_STATE_IDLE:
-                if (callReceived) {
-                    callReceived = false;
-                    mRecorder.stopRecording();
-                    mRecorder = null;
-                    isIncomingCall = false;
-                    hideRecordingIcon();
-                    context.stopService(new Intent(context, CallRecorderService.class));
-                    Log.d(Constants.DEBUG_TAG, "IDLE " + callingNumber);
+                    handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (telephonyManager.getCallState() == TelephonyManager.CALL_STATE_OFFHOOK) {
+                                handler.postDelayed(this, 1000);
+                            } else {
+                                if (callReceived) {
+                                    callReceived = false;
+                                    mRecorder.stopRecording();
+                                    mmr.setDataSource(mRecorder.getFilePath());
+                                    long duration = Long.parseLong(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)) / 1000;
+                                    if (duration <= minDuration) {
+                                        File file = new File(mRecorder.getFilePath());
+                                        file.delete();
+                                    }
+                                    mRecorder = null;
+                                    isIncomingCall = false;
+                                    hideRecordingIcon();
+                                    context.stopService(new Intent(context, CallRecorderService.class));
+                                    Log.d(Constants.DEBUG_TAG, "IDLE " + callingNumber);
+                                }
+                            }
+                        }
+                    }, 1000);
                 }
                 break;
         }

@@ -1,12 +1,18 @@
 package ua.moskovkin.autorecorder.fragments;
 
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +26,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
@@ -48,7 +55,7 @@ public class AllRecorderListFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayout);
         mRecyclerView.setHasFixedSize(true);
 
-        updateUI();
+        updateUIWrapper();
 
         return view;
     }
@@ -63,6 +70,63 @@ public class AllRecorderListFragment extends Fragment {
             mAdapter.setRecordList(allRecords);
             mAdapter.notifyDataSetChanged();
         }
+    }
+
+    private void updateUIWrapper() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            List<String> permissionsNeeded = new ArrayList<>();
+
+            final List<String> permissionsList = new ArrayList<>();
+            if (!addPermission(permissionsList, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                permissionsNeeded.add("SD Card");
+            if (!addPermission(permissionsList, Manifest.permission.READ_CONTACTS))
+                permissionsNeeded.add("Read Contacts");
+            if (!addPermission(permissionsList, Manifest.permission.RECORD_AUDIO))
+                permissionsNeeded.add("Record Audio");
+            if (!addPermission(permissionsList, Manifest.permission.READ_PHONE_STATE))
+                permissionsNeeded.add("Read Phone State");
+
+            if (permissionsList.size() > 0) {
+                if (permissionsNeeded.size() > 0) {
+                    // Need Rationale
+                    String message = "You need to grant access to " + permissionsNeeded.get(0);
+                    for (int i = 1; i < permissionsNeeded.size(); i++)
+                        message = message + ", " + permissionsNeeded.get(i);
+                    showMessageOKCancel(message,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    requestPermissions(permissionsList.toArray(new String[permissionsList.size()]), 1);
+                                }
+                            });
+                    return;
+                }
+                requestPermissions(permissionsList.toArray(new String[permissionsList.size()]), 1);
+                return;
+            }
+        }
+
+        updateUI();
+    }
+
+    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
+        new AlertDialog.Builder(getActivity())
+                .setMessage(message)
+                .setPositiveButton("OK", okListener)
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show();
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private boolean addPermission(List<String> permissionsList, String permission) {
+        if (getContext().checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+            permissionsList.add(permission);
+            // Check for Rationale Option
+            if (!shouldShowRequestPermissionRationale(permission))
+                return false;
+        }
+        return true;
     }
 
     private String getContactName(final String phoneNumber) {
@@ -194,7 +258,7 @@ public class AllRecorderListFragment extends Fragment {
             CustomAudioPlayer player = new CustomAudioPlayer();
             player.setPath(mPath);
             fm.beginTransaction()
-                    .setCustomAnimations(R.anim.fragment_slide_up_start,R.anim.fragment_slide_up_end)
+                    .setCustomAnimations(R.anim.fragment_slide_up_start, R.anim.fragment_slide_up_end)
                     .replace(R.id.player_container, player, "player").commit();
         }
     }

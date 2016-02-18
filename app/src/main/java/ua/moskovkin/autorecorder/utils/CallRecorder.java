@@ -42,4 +42,8 @@ public class CallRecorder {
     public void setFilePath(String mFilePath) {
         this.mFilePath = mFilePath;
     }
+
+    public String getFilePath() {
+        return mFilePath;
+    }
 }
