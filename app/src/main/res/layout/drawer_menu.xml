@@ -3,9 +3,7 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
-    <group
-        android:id="@+id/group_1"
-        android:checkableBehavior="single">
+    <group android:checkableBehavior="single">
 
         <item
             android:id="@+id/all_recordings_drawer_item"
@@ -28,9 +26,7 @@
             android:title="@string/by_contact_title" />
     </group>
 
-    <group
-        android:id="@+id/group_2"
-        android:checkableBehavior="single">
+    <group android:checkableBehavior="single">
 
         <item
             android:id="@+id/settings"
@@ -39,13 +35,11 @@
             android:title="@string/setting_title" />
 
         <item
-            android:id="@+id/rate_me"
             android:checked="false"
             android:icon="@mipmap/ic_thumb_up"
             android:title="@string/rate_app_title" />
 
         <item
-            android:id="@+id/share"
             android:checked="false"
             android:icon="@mipmap/ic_share"
             android:title="@string/share_title" />

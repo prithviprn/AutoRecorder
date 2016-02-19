@@ -49,10 +49,10 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
         if (dirs.length > 1) {
             appFolder = new File(dirs[0], getString(R.string.app_name));
             appFolderEx = new File(dirs[1], getString(R.string.app_name));
-            if(!appFolder.exists()) {
+            if(!appFolderEx.exists()) {
                 try {
-                    appFolder.mkdirs();
                     appFolderEx.mkdirs();
+                    appFolder.mkdirs();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -21,7 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".preference.SettingActivity"/>
+        <activity
+            android:name=".preference.SettingActivity"
+            android:parentActivityName=".MainActivity"/>
 
         <receiver android:name=".broadcastreceiver.CallRecorderBroadcastReceiver">
             <intent-filter>
