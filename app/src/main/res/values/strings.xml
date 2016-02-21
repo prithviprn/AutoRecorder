@@ -13,4 +13,11 @@
     <string name="disabled">Disabled</string>
     <string name="general_settings">General</string>
     <string name="recording_settings">Recording</string>
+    <string name="recording_directory">Recording directory</string>
+    <string name="audio_source">Audio Source</string>
+    <string name="recording_duration_hint">Records shorter than this duration in seconds will be deleted</string>
+    <string name="select_source">Select source</string>
+    <string name="audio_format">Audio Format</string>
+    <string name="select_audio_format">Select Audio Format</string>
+    <string name="min_rec_duration">Min Recording Duration</string>
 </resources>

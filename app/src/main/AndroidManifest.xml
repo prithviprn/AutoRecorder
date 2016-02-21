@@ -22,8 +22,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".preference.SettingActivity"
-            android:parentActivityName=".MainActivity"/>
+            android:name=".preference.SettingActivity" />
+
+        <activity
+            android:name=".preference.DirChooserActivity"/>
 
         <receiver android:name=".broadcastreceiver.CallRecorderBroadcastReceiver">
             <intent-filter>

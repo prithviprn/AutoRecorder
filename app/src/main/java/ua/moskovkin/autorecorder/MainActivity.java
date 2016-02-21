@@ -3,6 +3,7 @@ package ua.moskovkin.autorecorder;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -29,7 +30,6 @@ import ua.moskovkin.autorecorder.preference.SettingActivity;
 
 public class MainActivity extends SingleFragmentActivity implements RecorderListFragment.Callbacks {
     public static File appFolder;
-    private File appFolderEx;
     private Toolbar toolbar;
     private ToggleButton mToggleButton;
     private TextView mToggleStatusTextView;
@@ -45,21 +45,9 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
         super.onCreate(savedInstanceState);
         settings = PreferenceManager.getDefaultSharedPreferences(this);
         fm = getSupportFragmentManager();
-        File[] dirs = ContextCompat.getExternalFilesDirs(this, null);
-        if (dirs.length > 1) {
-            appFolder = new File(dirs[0], getString(R.string.app_name));
-            appFolderEx = new File(dirs[1], getString(R.string.app_name));
-            if(!appFolderEx.exists()) {
-                try {
-                    appFolderEx.mkdirs();
-                    appFolder.mkdirs();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        } else {
-            appFolder = new File(dirs[0], getString(R.string.app_name));
-        }
+        appFolder = new File(settings.getString("app_save_path",
+                Environment.getExternalStorageDirectory().getAbsolutePath()
+                        + File.separator + getString(R.string.app_name)), getString(R.string.app_name));
         if(!appFolder.exists()) {
             try {
                 appFolder.mkdirs();

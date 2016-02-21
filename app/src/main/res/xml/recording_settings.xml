@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <SwitchPreference
-        android:title="Save On SD Card"
-        android:key="save_on_sd"/>
+    <Preference
+        android:title="@string/recording_directory"
+        android:key="app_save_path"/>
 
     <ListPreference
         android:key="audio_source"
-        android:title="Source"
-        android:dialogTitle="Select source"
+        android:title="@string/audio_source"
+        android:dialogTitle="@string/select_source"
         android:entries="@array/pref_audio_source_type"
         android:entryValues="@array/values_source_type"
         android:defaultValue="1"
@@ -16,14 +16,15 @@
 
     <ListPreference
         android:key="audio_format"
-        android:title="Audio Format"
-        android:dialogTitle="Select Audio Format"
+        android:title="@string/audio_format"
+        android:dialogTitle="@string/select_audio_format"
         android:entries="@array/pref_audio_source_format"
         android:entryValues="@array/values_source_format"
         android:defaultValue="1"
         android:summary="%s"/>
 
-    <EditTextPreference android:title="Min Recording Duration"
+    <EditTextPreference
+        android:title="@string/min_rec_duration"
         android:key="record_duration"
-        android:summary="Records shorter than this duration in seconds will be deleted"/>
+        android:summary="@string/recording_duration_hint"/>
 </PreferenceScreen>

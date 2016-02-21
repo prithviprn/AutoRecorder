@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaMetadataRetriever;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
@@ -65,12 +66,9 @@ public class RecorderPhoneStateListener extends PhoneStateListener {
                     } else {
                         dirName = number;
                     }
-                    File path = null;
-                    if (settings.getBoolean("save_on_sd", false)) {
-                        path = new File(dirs[1] + File.separator + context.getString(R.string.app_name), dirName);
-                    } else {
-                        path = new File(dirs[0] + File.separator + context.getString(R.string.app_name), dirName);
-                    }
+                    File path = new File(settings.getString("app_save_path",
+                            Environment.getExternalStorageDirectory().getAbsolutePath())
+                            + File.separator + context.getString(R.string.app_name), dirName);
                     if(!path.exists()) {
                         path.mkdirs();
                     }
