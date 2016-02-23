@@ -1,5 +1,6 @@
 package ua.moskovkin.autorecorder.preference;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -7,17 +8,13 @@ import android.os.Environment;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.preference.SwitchPreference;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 
 import java.io.File;
 
-import ua.moskovkin.autorecorder.Constants;
 import ua.moskovkin.autorecorder.R;
 
 public class SettingFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+    private static final int DIR_CHOSEN = 177;
     private Preference dirPreference;
     private SharedPreferences preference;
 
@@ -38,11 +35,22 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
             dirPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    startActivity(new Intent(getActivity(), DirChooserActivity.class));
+                    startActivityForResult(new Intent(getActivity(), DirChooserActivity.class), DIR_CHOSEN);
                     return false;
                 }
             });
 
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == DIR_CHOSEN) {
+
+            if (resultCode == Activity.RESULT_OK) {
+                dirPreference.setSummary(data.getStringExtra("path"));
+                dirPreference.getEditor().putString("app_save_path", data.getStringExtra("path")).commit();
+            }
         }
     }
 

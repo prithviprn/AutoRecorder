@@ -21,11 +21,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".preference.SettingActivity" />
 
         <activity
-            android:name=".preference.DirChooserActivity"/>
+            android:name=".preference.SettingActivity"
+            android:parentActivityName=".MainActivity"/>
+
+        <activity
+            android:name=".preference.DirChooserActivity"
+            android:parentActivityName=".preference.SettingActivity"/>
 
         <receiver android:name=".broadcastreceiver.CallRecorderBroadcastReceiver">
             <intent-filter>

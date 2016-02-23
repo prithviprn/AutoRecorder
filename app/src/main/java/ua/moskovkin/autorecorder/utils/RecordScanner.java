@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
 
+import ua.moskovkin.autorecorder.Constants;
 import ua.moskovkin.autorecorder.R;
 
 public class RecordScanner {
@@ -28,13 +30,19 @@ public class RecordScanner {
         TreeMap<String, String> song = new TreeMap<>();
         File home = new File(mediaPath);
         File[] subDirs = home.listFiles();
-        for (File file : subDirs){
-            if (file.listFiles(new FileExtensionFilter()).length > 0) {
-                File[] files = file.listFiles(new FileExtensionFilter());
-                for (File record : files) {
-                    song.put(record.getName().substring(0, (record.getName().length() - 4)), record.getPath());
+        try {
+            for (File file : subDirs) {
+                if (!file.getName().contains(".")) {
+                    if (file.listFiles(new FileExtensionFilter()).length > 0) {
+                        File[] files = file.listFiles(new FileExtensionFilter());
+                        for (File record : files) {
+                            song.put(record.getName().substring(0, (record.getName().length() - 4)), record.getPath());
+                        }
+                    }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return song;
     }
@@ -68,7 +76,13 @@ public class RecordScanner {
 
     class FileExtensionFilter implements FilenameFilter {
         public boolean accept(File dir, String name) {
-            return (name.contains("."));
+            if (name.endsWith(".3gp")) return true;
+            else if (name.endsWith(".mp4")) return true;
+            else if (name.endsWith(".amr")) return true;
+            else if (name.endsWith(".aac")) return true;
+            else if (name.endsWith(".webm")) return true;
+
+            return false;
         }
     }
 }

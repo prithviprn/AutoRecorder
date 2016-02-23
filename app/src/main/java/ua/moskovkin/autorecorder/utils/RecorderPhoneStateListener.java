@@ -32,7 +32,6 @@ public class RecorderPhoneStateListener extends PhoneStateListener {
     private Context context;
     private Intent intent;
     private MediaMetadataRetriever mmr;
-    private File[] dirs;
 
     public RecorderPhoneStateListener(Context context, Intent intent) {
         super();
@@ -41,13 +40,12 @@ public class RecorderPhoneStateListener extends PhoneStateListener {
         settings = PreferenceManager.getDefaultSharedPreferences(context);
         minDuration = Long.parseLong(settings.getString("record_duration", Constants.MIN_DURATION));
         mmr = new MediaMetadataRetriever();
-        dirs = ContextCompat.getExternalFilesDirs(context, null);
     }
 
     @Override
     public void onCallStateChanged(int state, String incomingNumber) {
         super.onCallStateChanged(state, incomingNumber);
-        final String callingNumber = intent.getStringExtra("NUMBER");
+        String callingNumber = intent.getStringExtra("NUMBER");
         switch (state) {
             //when incoming call
             case TelephonyManager.CALL_STATE_RINGING:
@@ -67,8 +65,7 @@ public class RecorderPhoneStateListener extends PhoneStateListener {
                         dirName = number;
                     }
                     File path = new File(settings.getString("app_save_path",
-                            Environment.getExternalStorageDirectory().getAbsolutePath())
-                            + File.separator + context.getString(R.string.app_name), dirName);
+                            Environment.getExternalStorageDirectory().getAbsolutePath()), dirName);
                     if(!path.exists()) {
                         path.mkdirs();
                     }

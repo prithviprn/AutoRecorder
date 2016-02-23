@@ -2,8 +2,7 @@ package ua.moskovkin.autorecorder.preference;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
+import android.support.v7.app.ActionBar;
 
 import java.util.List;
 
@@ -19,7 +18,6 @@ public class SettingActivity extends PreferenceActivity {
     @Override
     public void onBuildHeaders(List<Header> target) {
         loadHeadersFromResource(R.xml.preference_headers, target);
-
     }
 
     @Override

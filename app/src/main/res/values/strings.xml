@@ -20,4 +20,10 @@
     <string name="audio_format">Audio Format</string>
     <string name="select_audio_format">Select Audio Format</string>
     <string name="min_rec_duration">Min Recording Duration</string>
+    <string name="ok">Ok</string>
+    <string name="new_dir">New Folder</string>
+    <string name="wrong_dir">You don\'t have permission to write files in this directory</string>
+    <string name="create_dir_title">Create Directory</string>
+    <string name="create">Create</string>
+    <string name="cancel">Cancel</string>
 </resources>

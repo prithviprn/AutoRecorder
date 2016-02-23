@@ -9,10 +9,10 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -43,11 +43,13 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.d(Constants.DEBUG_TAG, "kfjd");
         settings = PreferenceManager.getDefaultSharedPreferences(this);
         fm = getSupportFragmentManager();
         appFolder = new File(settings.getString("app_save_path",
                 Environment.getExternalStorageDirectory().getAbsolutePath()
-                        + File.separator + getString(R.string.app_name)), getString(R.string.app_name));
+                        + File.separator + getString(R.string.app_name)));
         if(!appFolder.exists()) {
             try {
                 appFolder.mkdirs();
