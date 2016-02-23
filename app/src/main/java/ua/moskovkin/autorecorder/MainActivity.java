@@ -30,6 +30,7 @@ import ua.moskovkin.autorecorder.preference.SettingActivity;
 
 public class MainActivity extends SingleFragmentActivity implements RecorderListFragment.Callbacks {
     public static File appFolder;
+    private final static int PASS_REQUEST = 443;
     private Toolbar toolbar;
     private ToggleButton mToggleButton;
     private TextView mToggleStatusTextView;
@@ -44,8 +45,11 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d(Constants.DEBUG_TAG, "kfjd");
         settings = PreferenceManager.getDefaultSharedPreferences(this);
+        if (settings.getBoolean("pass_protection", false)) {
+            Intent i = new Intent(this, PassActivity.class);
+            startActivityForResult(i, PASS_REQUEST);
+        }
         fm = getSupportFragmentManager();
         appFolder = new File(settings.getString("app_save_path",
                 Environment.getExternalStorageDirectory().getAbsolutePath()
@@ -125,6 +129,13 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
         }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != RESULT_OK) {
+            finish();
+        }
     }
 
     @Override

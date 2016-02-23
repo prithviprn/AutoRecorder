@@ -26,4 +26,7 @@
     <string name="create_dir_title">Create Directory</string>
     <string name="create">Create</string>
     <string name="cancel">Cancel</string>
+    <string name="ask_for_pin">Ask for PIN</string>
+    <string name="set_pass_title">Enter New Password</string>
+    <string name="ask_for_pin_summary">Protect Your records from other</string>
 </resources>

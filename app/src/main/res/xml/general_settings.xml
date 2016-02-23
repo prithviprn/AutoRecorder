@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:key="pass_protection"
+        android:title="@string/ask_for_pin"
+        android:summary="@string/ask_for_pin_summary"
+        android:defaultValue="false" />
 
 </PreferenceScreen>

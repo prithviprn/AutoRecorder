@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical|center_horizontal"
+    android:background="@color/colorPrimaryDark">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp">
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:id="@+id/lockerImg"
+            android:src="@drawable/locker"
+            android:scaleType="fitCenter"
+            android:layout_marginBottom="10dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberPassword"
+            android:ems="10"
+            android:id="@+id/passEditText"
+            android:layout_gravity="center"
+            android:textSize="35sp"
+            android:textColor="@color/primary_text_default_material_dark"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:background="@color/colorPrimaryDark"
+            android:focusable="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="1"
+                android:id="@+id/btnOne"
+                android:layout_weight="1"
+                android:textSize="35sp"
+                android:theme="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:textColor="@color/primary_text_default_material_dark"
+                android:background="@color/colorPrimaryDark" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:id="@+id/btnTwo"
+                android:layout_weight="1"
+                android:textSize="35sp"
+                android:theme="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:textColor="@color/primary_text_default_material_dark"
+                android:background="@color/colorPrimaryDark" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="3"
+                android:id="@+id/btnThree"
+                android:layout_weight="1"
+                android:textSize="35sp"
+                android:theme="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:textColor="@color/primary_text_default_material_dark"
+                android:background="@color/colorPrimaryDark" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="4"
+                android:id="@+id/btnFour"
+                android:layout_weight="1"
+                android:textSize="35sp"
+                android:theme="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:textColor="@color/primary_text_default_material_dark"
+                android:background="@color/colorPrimaryDark" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="5"
+                android:id="@+id/btnFive"
+                android:layout_weight="1"
+                android:textSize="35sp"
+                android:theme="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:textColor="@color/primary_text_default_material_dark"
+                android:background="@color/colorPrimaryDark" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="6"
+                android:id="@+id/btnSix"
+                android:layout_weight="1"
+                android:textSize="35sp"
+                android:theme="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:textColor="@color/primary_text_default_material_dark"
+                android:elegantTextHeight="false"
+                android:background="@color/colorPrimaryDark" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="7"
+                android:id="@+id/btnSeven"
+                android:layout_weight="1"
+                android:textSize="35sp"
+                android:theme="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:textColor="@color/primary_text_default_material_dark"
+                android:background="@color/colorPrimaryDark" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="8"
+                android:id="@+id/btnEight"
+                android:layout_weight="1"
+                android:textSize="35sp"
+                android:theme="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:textColor="@color/primary_text_default_material_dark"
+                android:clickable="false"
+                android:background="@color/colorPrimaryDark" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="9"
+                android:id="@+id/btnNine"
+                android:layout_weight="1"
+                android:textSize="35sp"
+                android:theme="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:textColor="@color/primary_text_default_material_dark"
+                android:background="@color/colorPrimaryDark" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="C"
+                android:id="@+id/btnBackspace"
+                android:layout_weight="1"
+                android:textSize="35sp"
+                android:theme="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:textColor="@color/primary_text_default_material_dark"
+                android:background="@color/colorPrimaryDark" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:id="@+id/btnZero"
+                android:layout_weight="1"
+                android:textSize="35sp"
+                android:theme="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:textColor="@color/primary_text_default_material_dark"
+                android:background="@color/colorPrimaryDark" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="OK"
+                android:id="@+id/btnOk"
+                android:layout_weight="1"
+                android:textSize="35sp"
+                android:theme="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:textColor="@color/primary_text_default_material_dark"
+                android:background="@color/colorPrimaryDark" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

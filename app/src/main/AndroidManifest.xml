@@ -30,6 +30,8 @@
             android:name=".preference.DirChooserActivity"
             android:parentActivityName=".preference.SettingActivity"/>
 
+        <activity android:name=".PassActivity"/>
+
         <receiver android:name=".broadcastreceiver.CallRecorderBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PHONE_STATE" />
