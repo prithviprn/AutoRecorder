@@ -1,5 +1,6 @@
 package ua.moskovkin.autorecorder;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.io.File;
@@ -40,11 +42,13 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
     private View drawerHeader;
     private FragmentManager fm;
     private SharedPreferences settings;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        context = this;
         settings = PreferenceManager.getDefaultSharedPreferences(this);
         if (settings.getBoolean("pass_protection", false)) {
             Intent i = new Intent(this, PassActivity.class);
@@ -100,7 +104,10 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
                         break;
                     }
                     case R.id.settings: {
-                        startActivity(new Intent(getApplicationContext(), SettingActivity.class));
+                        Intent intent = new Intent(context, SettingActivity.class);
+                        startActivity(intent);
+                        mDrawerLayout.closeDrawer(mDrawerList);
+                        break;
                     }
                     case R.id.exit: {
                         finish();
@@ -138,8 +145,10 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode != RESULT_OK) {
-            finish();
+        if (resultCode == RESULT_OK && requestCode == PASS_REQUEST) {
+            Toast.makeText(this, R.string.access_granted, Toast.LENGTH_SHORT).show();
+        } else {
+           // finish();
         }
     }
 

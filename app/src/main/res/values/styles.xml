@@ -11,6 +11,7 @@
 
     <style name="ToolbarTheme" parent="AppTheme">
         <item name="android:textColorPrimary">@color/toolbarTextColorPrimary</item>
+        <item name="android:textColorSecondary">@color/toolbarTextColorSecondary</item>
     </style>
 
 </resources>

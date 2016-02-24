@@ -1,11 +1,13 @@
 package ua.moskovkin.autorecorder.preference;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
-import android.support.v7.app.ActionBar;
+import android.support.v4.app.NavUtils;
 
 import java.util.List;
 
+import ua.moskovkin.autorecorder.MainActivity;
 import ua.moskovkin.autorecorder.R;
 
 public class SettingActivity extends PreferenceActivity {

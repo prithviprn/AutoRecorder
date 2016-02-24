@@ -5,4 +5,6 @@
     <color name="colorAccent">#448AFF</color>
     <color name="textColorPrimary">#000000</color>
     <color name="toolbarTextColorPrimary">#ffffff</color>
+    <color name="toolbarTextColorSecondary">#ffffff</color>
+    <color name="playerBackground">#2E7D32</color>
 </resources>

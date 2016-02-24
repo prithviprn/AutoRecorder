@@ -24,7 +24,12 @@
 
         <activity
             android:name=".preference.SettingActivity"
-            android:parentActivityName=".MainActivity"/>
+            android:label="@string/setting_title"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
 
         <activity
             android:name=".preference.DirChooserActivity"

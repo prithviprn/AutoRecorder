@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -49,14 +50,20 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
                         LayoutInflater inflater = getActivity().getLayoutInflater();
 
                         final View dialogView = inflater.inflate(R.layout.set_password, null);
-                        final EditText valueView = (EditText) dialogView.findViewById(R.id.new_pass);;
+                        final EditText newPin = (EditText) dialogView.findViewById(R.id.new_pass);
+                        final EditText repeatPin = (EditText) dialogView.findViewById(R.id.repeat_pass);
 
                         builder.setView(dialogView)
-                                .setTitle(getString(R.string.set_pass_title))
                                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(final DialogInterface dialog, int id) {
-                                        defaultPreference.edit().putString("password", valueView.getText().toString()).commit();
+                                        if (newPin.getText().toString().equals(repeatPin.getText().toString())) {
+                                            defaultPreference.edit().putString("password", newPin.getText().toString()).commit();
+                                        } else {
+                                            ((SwitchPreference) preference).setChecked(false);
+                                            dialog.cancel();
+                                            Toast.makeText(getActivity(), R.string.pin_not_match, Toast.LENGTH_SHORT).show();
+                                        }
                                     }
                                 })
                                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

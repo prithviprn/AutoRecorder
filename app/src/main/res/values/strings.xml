@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">AutoRecorder</string>
-    <string name="setting_title">Setting</string>
-    <string name="rate_app_title">Rate me</string>
-    <string name="share_title">Tell a friend</string>
+    <string name="setting_title">Settings</string>
+    <string name="rate_app_title">Rate Me</string>
+    <string name="share_title">Tell a Friend</string>
     <string name="all_recordings_title">All Recordings</string>
     <string name="incoming_title">Incoming</string>
     <string name="outgoing_title">Outgoing</string>
@@ -13,10 +13,10 @@
     <string name="disabled">Disabled</string>
     <string name="general_settings">General</string>
     <string name="recording_settings">Recording</string>
-    <string name="recording_directory">Recording directory</string>
+    <string name="recording_directory">Recording Directory</string>
     <string name="audio_source">Audio Source</string>
     <string name="recording_duration_hint">Records shorter than this duration in seconds will be deleted</string>
-    <string name="select_source">Select source</string>
+    <string name="select_source">Select Source</string>
     <string name="audio_format">Audio Format</string>
     <string name="select_audio_format">Select Audio Format</string>
     <string name="min_rec_duration">Min Recording Duration</string>
@@ -27,6 +27,9 @@
     <string name="create">Create</string>
     <string name="cancel">Cancel</string>
     <string name="ask_for_pin">Ask for PIN</string>
-    <string name="set_pass_title">Enter New Password</string>
-    <string name="ask_for_pin_summary">Protect Your records from other</string>
+    <string name="ask_for_pin_summary">Protect Your Records From Other</string>
+    <string name="access_granted">Access Granted</string>
+    <string name="repeat_pass">Repeat PIN</string>
+    <string name="enter_pass">New PIN</string>
+    <string name="pin_not_match">PINs do not match</string>
 </resources>
