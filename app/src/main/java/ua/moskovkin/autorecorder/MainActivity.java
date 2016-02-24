@@ -50,6 +50,11 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
             Intent i = new Intent(this, PassActivity.class);
             startActivityForResult(i, PASS_REQUEST);
         }
+        if (settings.getString("app_save_path", "empty").equals("empty")) {
+            settings.edit().putString("app_save_path", Environment
+                    .getExternalStorageDirectory().getAbsolutePath()
+                    + File.separator + getString(R.string.app_name)).apply();
+        }
         fm = getSupportFragmentManager();
         appFolder = new File(settings.getString("app_save_path",
                 Environment.getExternalStorageDirectory().getAbsolutePath()

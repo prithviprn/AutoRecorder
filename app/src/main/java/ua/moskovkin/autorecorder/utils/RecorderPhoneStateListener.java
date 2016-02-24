@@ -79,6 +79,7 @@ public class RecorderPhoneStateListener extends PhoneStateListener {
                 }
                 break;
             case TelephonyManager.CALL_STATE_IDLE:
+                Log.d(Constants.DEBUG_TAG, "IDLE INTENT");
                 if (callReceived) {
                     hideRecordingIcon();
                     callReceived = false;

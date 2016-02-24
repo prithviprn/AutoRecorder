@@ -56,7 +56,7 @@ public class DirChooserActivity extends AppCompatActivity implements CreateDirDi
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         dirList = new ArrayList<>();
-        dirList = getSdCardPaths();
+        dirList.add(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
         toolbar.setSubtitle(getString(R.string.app_name));
 
         listView = (ListView) findViewById(R.id.list_view);
@@ -66,7 +66,7 @@ public class DirChooserActivity extends AppCompatActivity implements CreateDirDi
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (dirList.get(position).getName().endsWith("..")) {
-                    dirList = getSdCardPaths();
+                    dirList = getDirlist(Environment.getExternalStorageDirectory().getAbsolutePath());
                 } else {
                     dirList = getDirlist(dirList.get(position).getPath());
                 }
@@ -92,24 +92,12 @@ public class DirChooserActivity extends AppCompatActivity implements CreateDirDi
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (!upDir.getAbsolutePath().equals("/")) {
+        if (!upDir.getAbsolutePath().equals(Environment.getExternalStorageDirectory().getAbsolutePath())) {
             resultArrayList.add(new File(upDir.getAbsolutePath(), ".."));
         }
         Collections.sort(resultArrayList);
 
         return resultArrayList;
-    }
-
-    private ArrayList<File> getSdCardPaths() {
-        Map<String, String> env = System.getenv();
-        ArrayList<File> vars = new ArrayList<>();
-        for (Map.Entry<String, String> value : env.entrySet()) {
-            if (value.getValue().endsWith("/storage")
-                    || value.getValue().endsWith("/sdcard")) {
-                vars.add(new File(value.getValue()));
-            }
-        }
-        return vars;
     }
 
     @Override

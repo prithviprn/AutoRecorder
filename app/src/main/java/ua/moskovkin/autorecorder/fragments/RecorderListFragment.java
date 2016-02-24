@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -89,9 +91,30 @@ public class RecorderListFragment extends Fragment {
         return contactName;
     }
 
+    private String getContactImage(final String phoneNumber) {
+        Uri uri = Uri.parse("content://com.android.contacts/phone_lookup");
+        String[] projection = new String[] {ContactsContract.PhoneLookup.PHOTO_URI};
+
+        uri = Uri.withAppendedPath(uri, Uri.encode(phoneNumber));
+        Cursor cursor = getContext().getContentResolver().query(uri, projection, null, null, null);
+
+        String contactImageUri = "";
+
+        if (cursor.moveToFirst())
+        {
+            if (cursor.getString(0) != null)
+                contactImageUri = cursor.getString(0);
+        }
+
+        cursor.close();
+
+        return contactImageUri;
+    }
+
     private class RecorderListHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView mTitleTextView;
+        private ImageView mContactImage;
         private String mRecord;
 
         public RecorderListHolder(View itemView) {
@@ -99,6 +122,7 @@ public class RecorderListFragment extends Fragment {
 
             itemView.setOnClickListener(this);
             mTitleTextView = (TextView) itemView.findViewById(R.id.recorder_list_item);
+            mContactImage = (ImageView) itemView.findViewById(R.id.contact_image_category);
         }
 
         public void bindRecorderDir(String singleRecord) {
@@ -107,6 +131,12 @@ public class RecorderListFragment extends Fragment {
                 mTitleTextView.setText(singleRecord);
             } else {
                 mTitleTextView.setText(getContactName(singleRecord));
+            }
+            if (!getContactImage(singleRecord).equals("")) {
+                Uri uri = Uri.parse(getContactImage(singleRecord));
+                mContactImage.setImageURI(uri);
+            } else {
+                mContactImage.setImageResource(R.drawable.contacts_icon);
             }
         }
 
