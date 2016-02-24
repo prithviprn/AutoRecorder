@@ -3,12 +3,15 @@ package ua.moskovkin.autorecorder.fragments;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -38,11 +42,15 @@ import ua.moskovkin.autorecorder.utils.Utils;
 public class AllRecorderListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecorderAdapter mAdapter;
+    private SharedPreferences settings;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+
+        settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
     }
 
     @Override
@@ -90,7 +98,7 @@ public class AllRecorderListFragment extends Fragment {
             if (permissionsList.size() > 0) {
                 if (permissionsNeeded.size() > 0) {
                     // Need Rationale
-                    String message = "You need to grant access to " + permissionsNeeded.get(0);
+                    String message = R.string.grant_access_message + permissionsNeeded.get(0);
                     for (int i = 1; i < permissionsNeeded.size(); i++)
                         message = message + ", " + permissionsNeeded.get(i);
                     showMessageOKCancel(message,
@@ -207,19 +215,8 @@ public class AllRecorderListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-//            String dir = getArguments().getString(ARG_RECORDER_DIR_ID);
-//            CallRecorder recorder = new CallRecorder(MainActivity.appFolder + File.separator + dir + File.separator + mRecord + ".3gp");
-//            recorder.startPlaying();
-//            Uri uri = Uri.parse(mPath);
-//            Intent i = new Intent(Intent.ACTION_VIEW, uri);
-//            i.setDataAndType(uri,"video/3gpp");
-//            startActivity(i);
-            FragmentManager fm = getActivity().getSupportFragmentManager();
-            CustomAudioPlayer player = new CustomAudioPlayer();
-            player.setPath(mPath);
-            fm.beginTransaction()
-                    .setCustomAnimations(R.anim.fragment_slide_up_start, R.anim.fragment_slide_up_end)
-                    .replace(R.id.player_container, player, "player").commit();
+            Utils.playRecord(mPath, settings.getBoolean("internal_player", true),
+                    getActivity().getSupportFragmentManager(), getActivity());
         }
     }
 

@@ -1,9 +1,11 @@
 package ua.moskovkin.autorecorder.fragments;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,17 +23,20 @@ import java.util.HashMap;
 
 import ua.moskovkin.autorecorder.R;
 import ua.moskovkin.autorecorder.utils.RecordScanner;
+import ua.moskovkin.autorecorder.utils.Utils;
 
 public class RecorderFragment extends Fragment {
     private static final String ARG_RECORDER_DIR_ID = "recorder_dir_id";
     private RecyclerView mRecyclerView;
     private RecorderAdapter mAdapter;
     private String recorderDirName;
+    private SharedPreferences settings;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         recorderDirName = (String) getArguments().getSerializable(ARG_RECORDER_DIR_ID);
+        settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
     }
 
     @Override
@@ -111,13 +116,8 @@ public class RecorderFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-//            String dir = getArguments().getString(ARG_RECORDER_DIR_ID);
-//            CallRecorder recorder = new CallRecorder(MainActivity.appFolder + File.separator + dir + File.separator + mRecord + ".3gp");
-//            recorder.startPlaying();
-            Uri uri = Uri.parse(mPath);
-            Intent i = new Intent(Intent.ACTION_VIEW, uri);
-            i.setDataAndType(uri,"video/3gpp");
-            startActivity(i);
+            Utils.playRecord(mPath, settings.getBoolean("internal_player", true),
+                    getActivity().getSupportFragmentManager(), getActivity());
         }
     }
 

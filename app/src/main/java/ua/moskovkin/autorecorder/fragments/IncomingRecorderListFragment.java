@@ -1,9 +1,11 @@
 package ua.moskovkin.autorecorder.fragments;
 
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -31,11 +33,14 @@ import ua.moskovkin.autorecorder.utils.Utils;
 public class IncomingRecorderListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecorderAdapter mAdapter;
+    private SharedPreferences settings;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+
+        settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
     }
 
     @Override
@@ -142,12 +147,8 @@ public class IncomingRecorderListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            FragmentManager fm = getActivity().getSupportFragmentManager();
-            CustomAudioPlayer player = new CustomAudioPlayer();
-            player.setPath(mPath);
-            fm.beginTransaction()
-                    .setCustomAnimations(R.anim.fragment_slide_up_start, R.anim.fragment_slide_up_end)
-                    .replace(R.id.player_container, player, "player").commit();
+            Utils.playRecord(mPath, settings.getBoolean("internal_player", true),
+                    getActivity().getSupportFragmentManager(), getActivity());
         }
     }
 

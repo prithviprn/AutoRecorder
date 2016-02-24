@@ -58,7 +58,7 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
                                     @Override
                                     public void onClick(final DialogInterface dialog, int id) {
                                         if (newPin.getText().toString().equals(repeatPin.getText().toString())) {
-                                            defaultPreference.edit().putString("password", newPin.getText().toString()).commit();
+                                            defaultPreference.edit().putString("password", newPin.getText().toString()).apply();
                                         } else {
                                             ((SwitchPreference) preference).setChecked(false);
                                             dialog.cancel();

@@ -8,4 +8,10 @@
         android:summary="@string/ask_for_pin_summary"
         android:defaultValue="false" />
 
+    <SwitchPreference
+        android:key="internal_player"
+        android:title="@string/use_internal_player"
+        android:summary="@string/use_internal_player_summary"
+        android:defaultValue="true" />
+
 </PreferenceScreen>
