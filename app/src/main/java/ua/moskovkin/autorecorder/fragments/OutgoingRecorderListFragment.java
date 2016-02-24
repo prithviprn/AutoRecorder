@@ -26,6 +26,7 @@ import java.util.TreeMap;
 
 import ua.moskovkin.autorecorder.R;
 import ua.moskovkin.autorecorder.utils.RecordScanner;
+import ua.moskovkin.autorecorder.utils.Utils;
 
 public class OutgoingRecorderListFragment extends Fragment {
     private RecyclerView mRecyclerView;
@@ -64,47 +65,7 @@ public class OutgoingRecorderListFragment extends Fragment {
         }
     }
 
-    private String getContactName(final String phoneNumber) {
-        Uri uri = Uri.parse("content://com.android.contacts/phone_lookup");
-        String[] projection = new String[] {ContactsContract.PhoneLookup.DISPLAY_NAME};
-
-        uri = Uri.withAppendedPath(uri, Uri.encode(phoneNumber));
-        Cursor cursor = getContext().getContentResolver().query(uri, projection, null, null, null);
-
-        String contactName = "";
-
-        if (cursor.moveToFirst())
-        {
-            contactName = cursor.getString(0);
-        }
-
-        cursor.close();
-
-        return contactName;
-    }
-
-    private String getContactImage(final String phoneNumber) {
-        Uri uri = Uri.parse("content://com.android.contacts/phone_lookup");
-        String[] projection = new String[] {ContactsContract.PhoneLookup.PHOTO_URI};
-
-        uri = Uri.withAppendedPath(uri, Uri.encode(phoneNumber));
-        Cursor cursor = getContext().getContentResolver().query(uri, projection, null, null, null);
-
-        String contactImageUri = "";
-
-        if (cursor.moveToFirst())
-        {
-            if (cursor.getString(0) != null)
-                contactImageUri = cursor.getString(0);
-        }
-
-        cursor.close();
-
-        return contactImageUri;
-    }
-
     private class RecorderHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
         private TextView mTitleTextView;
         private TextView mDateTextView;
         private TextView mDurationTextView;
@@ -129,8 +90,8 @@ public class OutgoingRecorderListFragment extends Fragment {
         public void bindRecorderItem(String singleRecordTitle, String path) {
             String[] splitedPath = path.split("/");
 
-            if (!getContactImage(splitedPath[splitedPath.length - 2]).equals("")) {
-                Uri uri = Uri.parse(getContactImage(splitedPath[splitedPath.length - 2]));
+            if (!Utils.getContactImage(splitedPath[splitedPath.length - 2], getActivity()).equals("")) {
+                Uri uri = Uri.parse(Utils.getContactImage(splitedPath[splitedPath.length - 2], getActivity()));
                 mContactImage.setImageURI(uri);
             } else {
                 mContactImage.setImageResource(R.drawable.contacts_icon);
@@ -147,10 +108,10 @@ public class OutgoingRecorderListFragment extends Fragment {
             mRecord = singleRecordTitle;
             mPath = path;
 
-            if (getContactName(splitedPath[splitedPath.length - 2]).equals("")) {
+            if (Utils.getContactName(splitedPath[splitedPath.length - 2], getActivity()).equals("")) {
                 mTitleTextView.setText(splitedPath[splitedPath.length - 2]);
             } else {
-                mTitleTextView.setText(getContactName(splitedPath[splitedPath.length - 2]));
+                mTitleTextView.setText(Utils.getContactName(splitedPath[splitedPath.length - 2], getActivity()));
             }
 
             mDateTextView.setText(String.format("%02d %s, %02d:%02d:%02d",
