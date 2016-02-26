@@ -98,7 +98,7 @@ public class AllRecorderListFragment extends Fragment {
             if (permissionsList.size() > 0) {
                 if (permissionsNeeded.size() > 0) {
                     // Need Rationale
-                    String message = R.string.grant_access_message + permissionsNeeded.get(0);
+                    String message = getString(R.string.grant_access_message) + permissionsNeeded.get(0);
                     for (int i = 1; i < permissionsNeeded.size(); i++)
                         message = message + ", " + permissionsNeeded.get(i);
                     showMessageOKCancel(message,
@@ -170,13 +170,7 @@ public class AllRecorderListFragment extends Fragment {
                 mContactImage.setImageResource(R.drawable.contacts_icon);
             }
 
-            Calendar calendar = new GregorianCalendar(
-                    Integer.parseInt(splitedPath[splitedPath.length - 1].substring(0, 4)),
-                    Integer.parseInt(splitedPath[splitedPath.length - 1].substring(4, 6)) - 1,
-                    Integer.parseInt(splitedPath[splitedPath.length - 1].substring(6, 8)),
-                    Integer.parseInt(splitedPath[splitedPath.length - 1].substring(8, 10)),
-                    Integer.parseInt(splitedPath[splitedPath.length - 1].substring(10, 12)),
-                    Integer.parseInt(splitedPath[splitedPath.length - 1].substring(12, 14)));
+            Calendar calendar = Utils.getCalendarFromFile(splitedPath);
 
             mRecord = singleRecordTitle;
             mPath = path;

@@ -10,5 +10,10 @@
         android:title="@string/recording_settings">
         <extra android:name="category" android:value="recording"/>
     </header>
+    <header
+        android:fragment="ua.moskovkin.autorecorder.preference.SettingFragment"
+        android:title="@string/cloud_services">
+        <extra android:name="category" android:value="cloud"/>
+    </header>
 
 </preference-headers>

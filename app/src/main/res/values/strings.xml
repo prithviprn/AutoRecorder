@@ -15,11 +15,11 @@
     <string name="recording_settings">Recording</string>
     <string name="recording_directory">Recording Directory</string>
     <string name="audio_source">Audio Source</string>
-    <string name="recording_duration_hint">Records shorter than this duration in seconds will be deleted</string>
+    <string name="recording_duration_hint">Records shorter than this duration in seconds will be deleted. If "0" - disabled</string>
     <string name="select_source">Select Source</string>
     <string name="audio_format">Audio Format</string>
     <string name="select_audio_format">Select Audio Format</string>
-    <string name="min_rec_duration">Min Recording Duration</string>
+    <string name="min_rec_duration">Delete short recordings</string>
     <string name="ok">Ok</string>
     <string name="new_dir">New Folder</string>
     <string name="wrong_dir">You don\'t have permission to write files in this directory</string>
@@ -32,9 +32,15 @@
     <string name="repeat_pass">Repeat PIN</string>
     <string name="enter_pass">New PIN</string>
     <string name="pin_not_match">PINs do not match</string>
-    <string name="grant_access_message">You need to grant access to</string>
+    <string name="grant_access_message">You need to grant access to </string>
     <string name="use_internal_player">Internal Media Player</string>
     <string name="use_internal_player_summary">Use built-in player to play records</string>
     <string name="select_player">Select Player</string>
     <string name="no_player">There is no media player in the system. Turn on internal player in general settings.</string>
+    <string name="cloud_services">Cloud Services</string>
+    <string name="google_drive">Google Drive</string>
+    <string name="min_duration_dialog">Choose min duration</string>
+    <string name="ask_to_save_record">Ask before saving record</string>
+    <string name="ask_to_save_record_summary">Ask whether to keep or delete recording after each call</string>
+    <string name="save_record_dialog_title">Save this record</string>
 </resources>

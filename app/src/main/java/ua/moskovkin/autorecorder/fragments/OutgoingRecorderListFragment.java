@@ -102,13 +102,7 @@ public class OutgoingRecorderListFragment extends Fragment {
                 mContactImage.setImageResource(R.drawable.contacts_icon);
             }
 
-            Calendar calendar = new GregorianCalendar(
-                    Integer.parseInt(splitedPath[splitedPath.length - 1].substring(0, 4)),
-                    Integer.parseInt(splitedPath[splitedPath.length - 1].substring(4, 6)) - 1,
-                    Integer.parseInt(splitedPath[splitedPath.length - 1].substring(6, 8)),
-                    Integer.parseInt(splitedPath[splitedPath.length - 1].substring(8, 10)),
-                    Integer.parseInt(splitedPath[splitedPath.length - 1].substring(10, 12)),
-                    Integer.parseInt(splitedPath[splitedPath.length - 1].substring(12, 14)));
+            Calendar calendar = Utils.getCalendarFromFile(splitedPath);
 
             mRecord = singleRecordTitle;
             mPath = path;

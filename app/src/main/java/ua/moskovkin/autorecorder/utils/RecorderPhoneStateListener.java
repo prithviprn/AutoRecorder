@@ -2,16 +2,18 @@ package ua.moskovkin.autorecorder.utils;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaMetadataRetriever;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
+import android.app.AlertDialog;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.WindowManager;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -45,7 +47,12 @@ public class RecorderPhoneStateListener extends PhoneStateListener {
     @Override
     public void onCallStateChanged(int state, String incomingNumber) {
         super.onCallStateChanged(state, incomingNumber);
-        String callingNumber = intent.getStringExtra("NUMBER");
+        String callingNumber = null;
+        try {
+            callingNumber = intent.getStringExtra("NUMBER");
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
         switch (state) {
             //when incoming call
             case TelephonyManager.CALL_STATE_RINGING:
@@ -85,10 +92,18 @@ public class RecorderPhoneStateListener extends PhoneStateListener {
                     callReceived = false;
                     mRecorder.stopRecording();
                     mmr.setDataSource(mRecorder.getFilePath());
-                    long duration = Long.parseLong(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)) / 1000;
-                    if (duration <= minDuration) {
-                        File file = new File(mRecorder.getFilePath());
-                        file.delete();
+                    if (minDuration != 0) {
+                        long duration = Long.parseLong(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)) / 1000;
+                        if (duration <= minDuration) {
+                            File file = new File(mRecorder.getFilePath());
+                            file.delete();
+                        }
+                    }
+                    if (settings.getBoolean("ask_to_save", false)) {
+                        Intent intent = new Intent(context, SaveRecordDialogActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("filePath", mRecorder.getFilePath());
+                        context.startActivity(intent);
                     }
                     mRecorder = null;
                     isIncomingCall = false;

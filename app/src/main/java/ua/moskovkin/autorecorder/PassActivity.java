@@ -72,6 +72,10 @@ public class PassActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.toString().equals(settings.getString("password", " "))) {
+                    setResult(RESULT_OK);
+                    finish();
+                }
                 if (s.length() > 0) {
                     btnOk.setEnabled(true);
                 } else {

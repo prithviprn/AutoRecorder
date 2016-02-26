@@ -8,10 +8,23 @@ import android.provider.ContactsContract;
 import android.support.v4.app.FragmentManager;
 import android.widget.Toast;
 
+import java.util.GregorianCalendar;
+
 import ua.moskovkin.autorecorder.R;
 import ua.moskovkin.autorecorder.fragments.CustomAudioPlayer;
 
 public class Utils {
+    public static GregorianCalendar getCalendarFromFile(String[] path) {
+        GregorianCalendar calendar = new GregorianCalendar(
+                Integer.parseInt(path[path.length - 1].substring(0, 4)),
+                Integer.parseInt(path[path.length - 1].substring(4, 6)) - 1,
+                Integer.parseInt(path[path.length - 1].substring(6, 8)),
+                Integer.parseInt(path[path.length - 1].substring(8, 10)),
+                Integer.parseInt(path[path.length - 1].substring(10, 12)),
+                Integer.parseInt(path[path.length - 1].substring(12, 14)));
+
+        return calendar;
+    }
 
     public static void playRecord(String path, boolean isInternalPlayer, FragmentManager fm, Context context) {
         if (isInternalPlayer) {

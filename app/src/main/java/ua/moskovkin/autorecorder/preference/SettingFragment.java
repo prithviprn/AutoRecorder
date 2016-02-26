@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -21,6 +22,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.List;
 
 import ua.moskovkin.autorecorder.Constants;
 import ua.moskovkin.autorecorder.R;
@@ -30,6 +32,7 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
     private Preference dirPreference;
     private Preference askForPinPreference;
     private SharedPreferences defaultPreference;
+    private ListPreference minDurationPreference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +61,7 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
                                     @Override
                                     public void onClick(final DialogInterface dialog, int id) {
                                         if (newPin.getText().toString().equals(repeatPin.getText().toString())) {
-                                            defaultPreference.edit().putString("password", newPin.getText().toString()).apply();
+                                            defaultPreference.edit().putString("password", newPin.getText().toString()).commit();
                                         } else {
                                             ((SwitchPreference) preference).setChecked(false);
                                             dialog.cancel();
@@ -91,6 +94,20 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
                 }
             });
 
+            minDurationPreference = (ListPreference) findPreference("record_duration");
+            minDurationPreference.setTitle(getString(R.string.min_rec_duration)
+                    + " (" + defaultPreference.getString("record_duration", "0")
+                    + ")");
+            minDurationPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    preference.setTitle(getString(R.string.min_rec_duration)
+                            + " (" + newValue + ")");
+                    return true;
+                }
+            });
+        } else if ("cloud".equals(settings)) {
+            addPreferencesFromResource(R.xml.cloud_settings);
         }
     }
 

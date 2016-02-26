@@ -31,8 +31,8 @@ import ua.moskovkin.autorecorder.fragments.RecorderListFragment;
 import ua.moskovkin.autorecorder.preference.SettingActivity;
 
 public class MainActivity extends SingleFragmentActivity implements RecorderListFragment.Callbacks {
-    public static File appFolder;
     private final static int PASS_REQUEST = 443;
+    private File appFolder;
     private Toolbar toolbar;
     private ToggleButton mToggleButton;
     private TextView mToggleStatusTextView;
@@ -55,9 +55,15 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
             startActivityForResult(i, PASS_REQUEST);
         }
         if (settings.getString("app_save_path", "empty").equals("empty")) {
-            settings.edit().putString("app_save_path", Environment
-                    .getExternalStorageDirectory().getAbsolutePath()
-                    + File.separator + getString(R.string.app_name)).apply();
+            if (Environment.getExternalStorageState().equals(Environment.MEDIA_UNMOUNTED)) {
+                settings.edit().putString("app_save_path", Environment
+                        .getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
+                        + File.separator + getString(R.string.app_name)).apply();
+            } else {
+                settings.edit().putString("app_save_path", Environment
+                        .getExternalStorageDirectory().getAbsolutePath()
+                        + File.separator + getString(R.string.app_name)).apply();
+            }
         }
         fm = getSupportFragmentManager();
         appFolder = new File(settings.getString("app_save_path",
@@ -148,7 +154,7 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
         if (resultCode == RESULT_OK && requestCode == PASS_REQUEST) {
             Toast.makeText(this, R.string.access_granted, Toast.LENGTH_SHORT).show();
         } else {
-           // finish();
+           finish();
         }
     }
 

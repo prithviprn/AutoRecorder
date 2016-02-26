@@ -6,6 +6,12 @@
         android:title="@string/recording_directory"
         android:key="app_save_path"/>
 
+    <SwitchPreference
+        android:title="@string/ask_to_save_record"
+        android:key="ask_to_save"
+        android:summary="@string/ask_to_save_record_summary"
+        android:defaultValue="false"/>
+
     <ListPreference
         android:key="audio_source"
         android:title="@string/audio_source"
@@ -24,8 +30,12 @@
         android:defaultValue="1"
         android:summary="%s"/>
 
-    <EditTextPreference
-        android:title="@string/min_rec_duration"
+    <ListPreference
         android:key="record_duration"
+        android:title="@string/min_rec_duration"
+        android:dialogTitle="@string/min_duration_dialog"
+        android:entries="@array/pref_audio_duration"
+        android:entryValues="@array/pref_audio_duration"
+        android:defaultValue="0"
         android:summary="@string/recording_duration_hint"/>
 </PreferenceScreen>
