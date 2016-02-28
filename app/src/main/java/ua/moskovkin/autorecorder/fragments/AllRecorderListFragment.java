@@ -98,7 +98,7 @@ public class AllRecorderListFragment extends Fragment {
             if (permissionsList.size() > 0) {
                 if (permissionsNeeded.size() > 0) {
                     // Need Rationale
-                    String message = getString(R.string.grant_access_message) + permissionsNeeded.get(0);
+                    String message = getString(R.string.grant_access_message) + " " + permissionsNeeded.get(0);
                     for (int i = 1; i < permissionsNeeded.size(); i++)
                         message = message + ", " + permissionsNeeded.get(i);
                     showMessageOKCancel(message,
