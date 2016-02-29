@@ -22,8 +22,6 @@ import android.widget.ToggleButton;
 
 import java.io.File;
 
-import ua.moskovkin.autorecorder.fragments.IncomingRecorderListFragment;
-import ua.moskovkin.autorecorder.fragments.OutgoingRecorderListFragment;
 import ua.moskovkin.autorecorder.fragments.RecorderFragment;
 import ua.moskovkin.autorecorder.fragments.RecorderListFragment;
 import ua.moskovkin.autorecorder.fragments.UniversalFragment;

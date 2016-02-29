@@ -1,19 +1,13 @@
 package ua.moskovkin.autorecorder.preference;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,16 +20,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
-import ua.moskovkin.autorecorder.Constants;
 import ua.moskovkin.autorecorder.R;
 import ua.moskovkin.autorecorder.fragments.CreateDirDialog;
-import ua.moskovkin.autorecorder.utils.CallRecorder;
 
 public class DirChooserActivity extends AppCompatActivity implements CreateDirDialog.OnCompleteListener {
     private Toolbar toolbar;

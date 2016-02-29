@@ -1,10 +1,7 @@
 package ua.moskovkin.autorecorder.utils;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 
@@ -15,7 +12,6 @@ import java.util.HashMap;
 import java.util.TreeMap;
 
 import ua.moskovkin.autorecorder.R;
-import ua.moskovkin.autorecorder.model.Contact;
 
 public class RecordScanner {
     private String mediaPath;
@@ -30,27 +26,6 @@ public class RecordScanner {
                 Environment.getExternalStorageDirectory().getAbsolutePath()
                         + File.separator + context.getString(R.string.app_name));
         dbHelper = new DBHelper(context);
-    }
-
-    public TreeMap<String , String> getFileList() {
-        TreeMap<String, String> song = new TreeMap<>();
-        File home = new File(mediaPath);
-        File[] subDirs = home.listFiles();
-        try {
-            for (File file : subDirs) {
-                if (!file.getName().contains(".")) {
-                    if (file.listFiles(new FileExtensionFilter()).length > 0) {
-                        File[] files = file.listFiles(new FileExtensionFilter());
-                        for (File record : files) {
-                            song.put(record.getName().substring(0, (record.getName().length() - 4)), record.getPath());
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return song;
     }
 
     public TreeMap<String, ArrayList<HashMap<String, String>>> getDirList() {

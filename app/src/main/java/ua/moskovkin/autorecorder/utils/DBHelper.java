@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.media.MediaMetadataRetriever;
-import android.net.Uri;
 
 import java.io.File;
 import java.util.ArrayList;

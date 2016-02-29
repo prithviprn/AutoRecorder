@@ -2,18 +2,15 @@ package ua.moskovkin.autorecorder.utils;
 
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaMetadataRetriever;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.app.AlertDialog;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.view.WindowManager;
 
 import java.io.File;
 import java.text.SimpleDateFormat;

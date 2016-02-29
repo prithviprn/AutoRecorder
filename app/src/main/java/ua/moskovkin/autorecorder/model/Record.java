@@ -1,7 +1,5 @@
 package ua.moskovkin.autorecorder.model;
 
-import java.net.URI;
-import java.util.Date;
 import java.util.UUID;
 
 public class Record {
