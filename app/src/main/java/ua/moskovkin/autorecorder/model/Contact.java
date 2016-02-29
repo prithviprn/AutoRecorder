@@ -1,5 +1,7 @@
 package ua.moskovkin.autorecorder.model;
 
+import android.net.Uri;
+
 import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
@@ -9,19 +11,24 @@ public class Contact {
     private UUID id;
     private String contactNumber;
     private String contactName;
-    private URI contactImageUri;
-    private ArrayList<File> records;
+    private String contactImageUri;
+    private ArrayList<Record> records;
 
-    public Contact(String contactNumber, String contactName, URI contactImageUri, ArrayList<File> records) {
+    public Contact() {}
+
+    public Contact(String contactNumber, String contactName, String contactImageUri) {
         id = UUID.randomUUID();
         this.contactNumber = contactNumber;
         this.contactName = contactName;
         this.contactImageUri = contactImageUri;
-        this.records = records;
     }
 
     public UUID getId() {
         return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getContactNumber() {
@@ -40,19 +47,19 @@ public class Contact {
         this.contactName = contactName;
     }
 
-    public URI getContactImageUri() {
+    public String getContactImageUri() {
         return contactImageUri;
     }
 
-    public void setContactImageUri(URI contactImageUri) {
+    public void setContactImageUri(String contactImageUri) {
         this.contactImageUri = contactImageUri;
     }
 
-    public ArrayList<File> getRecords() {
+    public ArrayList<Record> getRecords() {
         return records;
     }
 
-    public void setRecords(ArrayList<File> records) {
+    public void setRecords(ArrayList<Record> records) {
         this.records = records;
     }
 }

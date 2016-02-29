@@ -1,10 +1,12 @@
 package ua.moskovkin.autorecorder.utils;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -12,18 +14,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
 
-import ua.moskovkin.autorecorder.Constants;
 import ua.moskovkin.autorecorder.R;
+import ua.moskovkin.autorecorder.model.Contact;
 
 public class RecordScanner {
     private String mediaPath;
     private SharedPreferences settings;
+    private DBHelper dbHelper;
+    private Context context;
 
     public RecordScanner(Context context) {
+        this.context = context;
         settings = PreferenceManager.getDefaultSharedPreferences(context);
         mediaPath = settings.getString("app_save_path",
                 Environment.getExternalStorageDirectory().getAbsolutePath()
-                + File.separator + context.getString(R.string.app_name));
+                        + File.separator + context.getString(R.string.app_name));
+        dbHelper = new DBHelper(context);
     }
 
     public TreeMap<String , String> getFileList() {

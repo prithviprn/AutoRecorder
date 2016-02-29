@@ -14,6 +14,7 @@ import ua.moskovkin.autorecorder.R;
 import ua.moskovkin.autorecorder.fragments.CustomAudioPlayer;
 
 public class Utils {
+
     public static GregorianCalendar getCalendarFromFile(String[] path) {
         GregorianCalendar calendar = new GregorianCalendar(
                 Integer.parseInt(path[path.length - 1].substring(0, 4)),
@@ -24,6 +25,20 @@ public class Utils {
                 Integer.parseInt(path[path.length - 1].substring(12, 14)));
 
         return calendar;
+    }
+
+    public static boolean isContactNameInContacts(String contactNumber, Context context) {
+        if (Utils.getContactName(contactNumber, context).equals("")) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean isContactImageSet(String contactNumber, Context context) {
+        if (Utils.getContactImage(contactNumber, context).equals("")) {
+            return false;
+        }
+        return true;
     }
 
     public static void playRecord(String path, boolean isInternalPlayer, FragmentManager fm, Context context) {

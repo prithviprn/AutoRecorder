@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -23,12 +22,13 @@ import android.widget.ToggleButton;
 
 import java.io.File;
 
-import ua.moskovkin.autorecorder.fragments.AllRecorderListFragment;
 import ua.moskovkin.autorecorder.fragments.IncomingRecorderListFragment;
 import ua.moskovkin.autorecorder.fragments.OutgoingRecorderListFragment;
 import ua.moskovkin.autorecorder.fragments.RecorderFragment;
 import ua.moskovkin.autorecorder.fragments.RecorderListFragment;
+import ua.moskovkin.autorecorder.fragments.UniversalFragment;
 import ua.moskovkin.autorecorder.preference.SettingActivity;
+import ua.moskovkin.autorecorder.utils.DBHelper;
 
 public class MainActivity extends SingleFragmentActivity implements RecorderListFragment.Callbacks {
     private final static int PASS_REQUEST = 443;
@@ -43,12 +43,14 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
     private FragmentManager fm;
     private SharedPreferences settings;
     private Context context;
+    private DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         context = this;
+
         settings = PreferenceManager.getDefaultSharedPreferences(this);
         if (settings.getBoolean("pass_protection", false)) {
             Intent i = new Intent(this, PassActivity.class);
@@ -76,6 +78,10 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
                 e.printStackTrace();
             }
         }
+
+        dbHelper = new DBHelper(context);
+        dbHelper.addContactNumbersAndRecordsToDb(appFolder.getPath());
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_menu);
         setSupportActionBar(toolbar);
@@ -94,15 +100,18 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
 
                     }
                     case R.id.all_recordings_drawer_item: {
-                        replaceRecorderListFragment(new AllRecorderListFragment(), "allListFragment");
+                        replaceRecorderListFragment(UniversalFragment
+                                .newInstance(UniversalFragment.ALL_RECORDS_FRAGMENT), "allListFragment");
                         break;
                     }
                     case R.id.incoming_drawer_item: {
-                        replaceRecorderListFragment(new IncomingRecorderListFragment(), "incomingListFragment");
+                        replaceRecorderListFragment(UniversalFragment
+                                .newInstance(UniversalFragment.INCOMING_RECORDS_FRAGMENT), "incomingListFragment");
                         break;
                     }
                     case R.id.outgoing_drawer_item: {
-                        replaceRecorderListFragment(new OutgoingRecorderListFragment(), "outgoingListFragment");
+                        replaceRecorderListFragment(UniversalFragment
+                                .newInstance(UniversalFragment.OUTGOING_RECORDS_FRAGMENT), "outgoingListFragment");
                         break;
                     }
                     case R.id.by_contact_drawer_item: {
@@ -160,7 +169,8 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
 
     @Override
     protected Fragment createFragment() {
-        return new AllRecorderListFragment();
+        UniversalFragment fragment = UniversalFragment.newInstance(UniversalFragment.ALL_RECORDS_FRAGMENT);
+        return fragment;
     }
 
     @Override

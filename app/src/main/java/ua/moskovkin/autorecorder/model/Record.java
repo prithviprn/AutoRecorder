@@ -6,20 +6,22 @@ import java.util.UUID;
 
 public class Record {
     private UUID id;
-    private UUID contactId;
+    private String contactId;
     private String recordNumber;
     private String recordFileName;
     private String recordPath;
     private String fileSize;
-    private URI contactImageUri;
-    private Date date;
-    private boolean isIncoming;
+    private String contactImageUri;
+    private String date;
+    private int isIncoming;
     private int hours;
     private int minutes;
     private int seconds;
 
-    public Record(UUID contactId, String recordNumber, String recordFileName,
-                  String recordPath, String fileSize, URI contactImageUri, Date date, boolean isIncoming,
+    public Record() {}
+
+    public Record(String contactId, String recordNumber, String recordFileName,
+                  String recordPath, String fileSize, String contactImageUri, String date, int isIncoming,
                   int hours, int minutes, int seconds) {
         id =UUID.randomUUID();
         this.contactId = contactId;
@@ -39,11 +41,15 @@ public class Record {
         return id;
     }
 
-    public UUID getContactId() {
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getContactId() {
         return contactId;
     }
 
-    public void setContactId(UUID contactId) {
+    public void setContactId(String contactId) {
         this.contactId = contactId;
     }
 
@@ -71,27 +77,27 @@ public class Record {
         this.fileSize = fileSize;
     }
 
-    public URI getContactImageUri() {
+    public String getContactImageUri() {
         return contactImageUri;
     }
 
-    public void setContactImageUri(URI contactImageUri) {
+    public void setContactImageUri(String contactImageUri) {
         this.contactImageUri = contactImageUri;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
-    public boolean isIncoming() {
+    public int isIncoming() {
         return isIncoming;
     }
 
-    public void setIsIncoming(boolean isIncoming) {
+    public void setIsIncoming(int isIncoming) {
         this.isIncoming = isIncoming;
     }
 
