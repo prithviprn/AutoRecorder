@@ -13,26 +13,31 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import ua.moskovkin.autorecorder.R;
-import ua.moskovkin.autorecorder.utils.RecordScanner;
-import ua.moskovkin.autorecorder.utils.Utils;
+import ua.moskovkin.autorecorder.model.Contact;
+import ua.moskovkin.autorecorder.utils.DBHelper;
 
 public class RecorderListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecorderListAdapter mAdapter;
     private Callbacks mCallbacks;
+    private DBHelper dbHelper;
 
     public interface Callbacks {
-        void onContactSelected(String contactNumber);
+        void onContactSelected(String contactUUID);
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mCallbacks = (Callbacks) activity;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        dbHelper = new DBHelper(getActivity());
     }
 
     @Override
@@ -59,23 +64,21 @@ public class RecorderListFragment extends Fragment {
     }
 
     private void updateUI() {
-        RecordScanner scanner = new RecordScanner(getContext());
-        Map<String, ArrayList<HashMap<String, String>>> recordBase = scanner.getDirList();
+        ArrayList<Contact> contacts = dbHelper.getAllContacts();
 
         if (mAdapter == null) {
-            mAdapter = new RecorderListAdapter(recordBase);
+            mAdapter = new RecorderListAdapter(contacts);
             mRecyclerView.setAdapter(mAdapter);
         } else {
-            mAdapter.setRecordBase(recordBase);
+            mAdapter.setRecordBase(contacts);
             mAdapter.notifyDataSetChanged();
         }
     }
 
     private class RecorderListHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
         private TextView mTitleTextView;
         private ImageView mContactImage;
-        private String mRecord;
+        private Contact contact;
 
         public RecorderListHolder(View itemView) {
             super(itemView);
@@ -85,15 +88,15 @@ public class RecorderListFragment extends Fragment {
             mContactImage = (ImageView) itemView.findViewById(R.id.contact_image_category);
         }
 
-        public void bindRecorderDir(String singleRecord) {
-            mRecord = singleRecord;
-            if (Utils.getContactName(singleRecord, getActivity()).equals("")) {
-                mTitleTextView.setText(singleRecord);
+        public void bindRecorderDir(Contact contact) {
+            this.contact = contact;
+            if (contact.getContactName().equals("")) {
+                mTitleTextView.setText(contact.getContactNumber());
             } else {
-                mTitleTextView.setText(Utils.getContactName(singleRecord, getActivity()));
+                mTitleTextView.setText(contact.getContactName());
             }
-            if (!Utils.getContactImage(singleRecord, getActivity()).equals("")) {
-                Uri uri = Uri.parse(Utils.getContactImage(singleRecord, getActivity()));
+            if (!contact.getContactImageUri().equals("")) {
+                Uri uri = Uri.parse(contact.getContactImageUri());
                 mContactImage.setImageURI(uri);
             } else {
                 mContactImage.setImageResource(R.drawable.contacts_icon);
@@ -102,21 +105,15 @@ public class RecorderListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            mCallbacks.onContactSelected(mRecord);
+            mCallbacks.onContactSelected(String.valueOf(contact.getId()));
         }
     }
 
     private class RecorderListAdapter extends RecyclerView.Adapter<RecorderListHolder> {
+        private ArrayList<Contact> contacts;
 
-        private Map<String, ArrayList<HashMap<String, String>>> recordBase;
-        private ArrayList<String> recordsDirName;
-
-        private RecorderListAdapter(Map<String, ArrayList<HashMap<String, String>>> recordBase) {
-            this.recordBase = recordBase;
-            recordsDirName = new ArrayList<>();
-            for(String key : recordBase.keySet()) {
-                recordsDirName.add(key);
-            }
+        private RecorderListAdapter(ArrayList<Contact> contacts) {
+            this.contacts = contacts;
         }
 
         @Override
@@ -129,17 +126,16 @@ public class RecorderListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(RecorderListHolder holder, int position) {
-            String singleRecord = recordsDirName.get(position);
-            holder.bindRecorderDir(singleRecord);
+            holder.bindRecorderDir(contacts.get(position));
         }
 
         @Override
         public int getItemCount() {
-            return recordBase.size();
+            return contacts.size();
         }
 
-        public void setRecordBase(Map<String, ArrayList<HashMap<String, String>>> recordBase) {
-            this.recordBase = recordBase;
+        public void setRecordBase(ArrayList<Contact> contacts) {
+            this.contacts = contacts;
         }
     }
 }

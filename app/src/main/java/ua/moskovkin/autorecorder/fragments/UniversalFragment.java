@@ -1,20 +1,13 @@
 package ua.moskovkin.autorecorder.fragments;
 
-import android.Manifest;
-import android.annotation.TargetApi;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import ua.moskovkin.autorecorder.Constants;
 import ua.moskovkin.autorecorder.R;
 import ua.moskovkin.autorecorder.model.Record;
 import ua.moskovkin.autorecorder.utils.DBHelper;
@@ -69,7 +60,6 @@ public class UniversalFragment extends Fragment {
                 break;
             }
         }
-        Log.d(Constants.DEBUG_TAG, records.size() + " RECords size");
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recorder_list_recycler_view);
         LinearLayoutManager mLayout = new LinearLayoutManager(getActivity());
@@ -78,7 +68,7 @@ public class UniversalFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayout);
         mRecyclerView.setHasFixedSize(true);
 
-        updateUIWrapper();
+        updateUI();
 
         return view;
     }
@@ -101,62 +91,6 @@ public class UniversalFragment extends Fragment {
             mAdapter.setRecordList(records);
             mAdapter.notifyDataSetChanged();
         }
-    }
-
-    private void updateUIWrapper() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            List<String> permissionsNeeded = new ArrayList<>();
-
-            final List<String> permissionsList = new ArrayList<>();
-            if (!addPermission(permissionsList, Manifest.permission.WRITE_EXTERNAL_STORAGE))
-                permissionsNeeded.add("SD Card");
-            if (!addPermission(permissionsList, Manifest.permission.READ_CONTACTS))
-                permissionsNeeded.add("Read Contacts");
-            if (!addPermission(permissionsList, Manifest.permission.RECORD_AUDIO))
-                permissionsNeeded.add("Record Audio");
-            if (!addPermission(permissionsList, Manifest.permission.READ_PHONE_STATE))
-                permissionsNeeded.add("Read Phone State");
-
-            if (permissionsList.size() > 0) {
-                if (permissionsNeeded.size() > 0) {
-                    // Need Rationale
-                    String message = getString(R.string.grant_access_message) + " " + permissionsNeeded.get(0);
-                    for (int i = 1; i < permissionsNeeded.size(); i++)
-                        message = message + ", " + permissionsNeeded.get(i);
-                    showMessageOKCancel(message,
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    requestPermissions(permissionsList.toArray(new String[permissionsList.size()]), 1);
-                                }
-                            });
-                    return;
-                }
-                requestPermissions(permissionsList.toArray(new String[permissionsList.size()]), 1);
-                return;
-            }
-        }
-        updateUI();
-    }
-
-    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
-        new AlertDialog.Builder(getActivity())
-                .setMessage(message)
-                .setPositiveButton(R.string.ok, okListener)
-                .setNegativeButton(R.string.cancel, null)
-                .create()
-                .show();
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    private boolean addPermission(List<String> permissionsList, String permission) {
-        if (getContext().checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
-            permissionsList.add(permission);
-            // Check for Rationale Option
-            if (!shouldShowRequestPermissionRationale(permission))
-                return false;
-        }
-        return true;
     }
 
     private class RecorderHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

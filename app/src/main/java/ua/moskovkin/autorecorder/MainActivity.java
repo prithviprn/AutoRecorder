@@ -29,7 +29,7 @@ import ua.moskovkin.autorecorder.preference.SettingActivity;
 import ua.moskovkin.autorecorder.utils.DBHelper;
 
 public class MainActivity extends SingleFragmentActivity implements RecorderListFragment.Callbacks {
-    private final static int PASS_REQUEST = 443;
+    private final static int PASS_REQUEST = 12;
     private File appFolder;
     private Toolbar toolbar;
     private ToggleButton mToggleButton;
@@ -177,15 +177,15 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
     }
 
     @Override
-    public void onContactSelected(String contactNumber) {
+    public void onContactSelected(String contactUUID) {
         if (findViewById(R.id.detail_fragment_container) == null) {
-            Fragment newDetail = RecorderFragment.newInstance(contactNumber);
+            Fragment newDetail = RecorderFragment.newInstance(contactUUID);
             getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.fragment_slide_left_start, R.anim.fragment_slide_left_end)
                     .replace(R.id.fragment_container, newDetail, "detailFragment")
                     .commit();
         } else {
-            Fragment newDetail = RecorderFragment.newInstance(contactNumber);
+            Fragment newDetail = RecorderFragment.newInstance(contactUUID);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.detail_fragment_container, newDetail)
                     .commit();

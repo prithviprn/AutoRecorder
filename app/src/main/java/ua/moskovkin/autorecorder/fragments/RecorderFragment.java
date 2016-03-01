@@ -1,7 +1,6 @@
 package ua.moskovkin.autorecorder.fragments;
 
 import android.content.SharedPreferences;
-import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -14,27 +13,27 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 
 import ua.moskovkin.autorecorder.R;
-import ua.moskovkin.autorecorder.utils.RecordScanner;
+import ua.moskovkin.autorecorder.model.Record;
+import ua.moskovkin.autorecorder.utils.DBHelper;
 import ua.moskovkin.autorecorder.utils.Utils;
 
 public class RecorderFragment extends Fragment {
     private static final String ARG_RECORDER_DIR_ID = "recorder_dir_id";
     private RecyclerView mRecyclerView;
     private RecorderAdapter mAdapter;
-    private String recorderDirName;
+    private String contactUUID;
     private SharedPreferences settings;
+    private DBHelper dbHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        recorderDirName = (String) getArguments().getSerializable(ARG_RECORDER_DIR_ID);
+        contactUUID = (String) getArguments().getSerializable(ARG_RECORDER_DIR_ID);
         settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        dbHelper = new DBHelper(getActivity());
     }
 
     @Override
@@ -50,36 +49,31 @@ public class RecorderFragment extends Fragment {
     }
 
     private void updateUI() {
-        ArrayList<HashMap<String, String>> mRecorderDir = new RecordScanner(getContext())
-                                                                            .getDirList()
-                                                                            .get(recorderDirName);
-        Collections.reverse(mRecorderDir);
+        ArrayList<Record> records = dbHelper.getRecordsForContact(contactUUID);
         if (mAdapter == null) {
-            mAdapter = new RecorderAdapter(mRecorderDir);
+            mAdapter = new RecorderAdapter(records);
             mRecyclerView.setAdapter(mAdapter);
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         } else {
-            mAdapter.setRecordList(mRecorderDir);
+            mAdapter.setRecordList(records);
             mAdapter.notifyDataSetChanged();
         }
     }
 
-    public static RecorderFragment newInstance(String dirId) {
+    public static RecorderFragment newInstance(String contactUUID) {
         Bundle args = new Bundle();
-        args.putSerializable(ARG_RECORDER_DIR_ID, dirId);
+        args.putSerializable(ARG_RECORDER_DIR_ID, contactUUID);
         RecorderFragment fragment = new RecorderFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
     private class RecorderHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
         private TextView mTitleTextView;
         private TextView mDurationTextView;
         private TextView mFileSIzeTextView;
         private ImageView mCallState;
-        private String mPath;
-        private String mRecord;
+        private Record record;
 
         public RecorderHolder(View itemView) {
             super(itemView);
@@ -91,40 +85,35 @@ public class RecorderFragment extends Fragment {
             mFileSIzeTextView = (TextView) itemView.findViewById(R.id.file_size_text_view);
         }
 
-        public void bindRecorderItem(String singleRecordTitle, String path) {
-            mRecord = singleRecordTitle;
-            mPath = path;
-            mTitleTextView.setText(mRecord);
-            MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-            mmr.setDataSource(path);
-            long duration = Long.parseLong(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)) / 1000;
-            int hours = (int) (duration / 3600);
-            int minutes = (int) ((duration / 60) - (hours * 60));
-            int seconds = (int) (duration - (hours * 3600) - (minutes * 60));
-            mDurationTextView.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
-            if (singleRecordTitle.endsWith("I")) {
+        public void bindRecorderItem(Record record) {
+            this.record = record;
+            mTitleTextView.setText(record.getRecordFileName());
+
+            mDurationTextView.setText(String.format("%02d:%02d:%02d",
+                                                                    record.getHours(),
+                                                                    record.getMinutes(),
+                                                                    record.getSeconds()));
+            if (record.isIncoming() == 1) {
                 mCallState.setImageResource(android.R.drawable.sym_call_incoming);
             } else {
                 mCallState.setImageResource(android.R.drawable.sym_call_outgoing);
             }
-            File file = new File(path);
-            String fileSize = String.valueOf(file.length()/1024);
-            mFileSIzeTextView.setText(fileSize + " kB");
+            mFileSIzeTextView.setText(record.getFileSize() + " kB");
         }
 
         @Override
         public void onClick(View v) {
-            Utils.playRecord(mPath, settings.getBoolean("internal_player", true),
+            Utils.playRecord(record.getRecordPath(), settings.getBoolean("internal_player", true),
                     getActivity().getSupportFragmentManager(), getActivity());
         }
     }
 
     private class RecorderAdapter extends RecyclerView.Adapter<RecorderHolder> {
 
-        private ArrayList<HashMap<String, String>> recorderList;
+        private ArrayList<Record> records;
 
-        private RecorderAdapter(ArrayList<HashMap<String, String>> recorderList) {
-            this.recorderList = recorderList;
+        private RecorderAdapter(ArrayList<Record> records) {
+            this.records = records;
         }
 
         @Override
@@ -137,18 +126,16 @@ public class RecorderFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(RecorderHolder holder, int position) {
-            String singleRecord = recorderList.get(position).get("songTitle");
-            String singleRecordPath = recorderList.get(position).get("songPath");
-            holder.bindRecorderItem(singleRecord, singleRecordPath);
+            holder.bindRecorderItem(records.get(position));
         }
 
         @Override
         public int getItemCount() {
-            return recorderList.size();
+            return records.size();
         }
 
-        public void setRecordList(ArrayList<HashMap<String, String>> recorderList) {
-            this.recorderList = recorderList;
+        public void setRecordList(ArrayList<Record> records) {
+            this.records = records;
         }
     }
 }

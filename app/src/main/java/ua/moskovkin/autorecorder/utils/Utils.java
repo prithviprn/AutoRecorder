@@ -28,17 +28,11 @@ public class Utils {
     }
 
     public static boolean isContactNameInContacts(String contactNumber, Context context) {
-        if (Utils.getContactName(contactNumber, context).equals("")) {
-            return false;
-        }
-        return true;
+        return !Utils.getContactName(contactNumber, context).equals("");
     }
 
     public static boolean isContactImageSet(String contactNumber, Context context) {
-        if (Utils.getContactImage(contactNumber, context).equals("")) {
-            return false;
-        }
-        return true;
+        return !Utils.getContactImage(contactNumber, context).equals("");
     }
 
     public static void playRecord(String path, boolean isInternalPlayer, FragmentManager fm, Context context) {

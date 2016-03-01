@@ -79,7 +79,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 + RF_DURATION_MINUTES + INTEGER_FIELD_COMA
                 + RF_DURATION_SECONDS + INTEGER_FIELD
                 + ");");
-
     }
 
     @Override
@@ -90,42 +89,44 @@ public class DBHelper extends SQLiteOpenHelper {
     public void addContactNumbersAndRecordsToDb(String path) {
         File home = new File(path);
         File[] subDirs = home.listFiles();
-        SQLiteDatabase db = getWritableDatabase();
-        for (File file : subDirs) {
-            if (file.isDirectory() && !isContactExist(file.getName())) {
-                ContentValues cv = new ContentValues();
-                Contact c = new Contact(
-                        file.getName(),
-                        Utils.getContactName(file.getName(), context),
-                        Utils.getContactImage(file.getName(), context)
-                );
-                cv.put(DBHelper.CF_UUID, c.getId().toString());
-                cv.put(DBHelper.CF_CONTACT_NUMBER, c.getContactNumber());
-                cv.put(DBHelper.CF_CONTACT_NAME, c.getContactName());
-                cv.put(DBHelper.CF_CONTACT_IMAGE_URI, String.valueOf(c.getContactImageUri()));
+        if (subDirs != null) {
+            SQLiteDatabase db = getWritableDatabase();
+            for (File file : subDirs) {
+                if (file.isDirectory() && !isContactExist(file.getName())) {
+                    ContentValues cv = new ContentValues();
+                    Contact c = new Contact(
+                            file.getName(),
+                            Utils.getContactName(file.getName(), context),
+                            Utils.getContactImage(file.getName(), context)
+                    );
+                    cv.put(DBHelper.CF_UUID, c.getId().toString());
+                    cv.put(DBHelper.CF_CONTACT_NUMBER, c.getContactNumber());
+                    cv.put(DBHelper.CF_CONTACT_NAME, c.getContactName());
+                    cv.put(DBHelper.CF_CONTACT_IMAGE_URI, String.valueOf(c.getContactImageUri()));
 
-                db.insert(DBHelper.CONTACTS_TABLE_NAME, null, cv);
-            } else if (isContactExist(file.getName())
-                    && Utils.isContactNameInContacts(file.getName(), context)) {
-                ContentValues cv = new ContentValues();
-                cv.put(DBHelper.CF_CONTACT_NAME, Utils.getContactName(file.getName(), context));
-                if (Utils.isContactImageSet(file.getName(), context)) {
-                    cv.put(CF_CONTACT_IMAGE_URI, Utils.getContactImage(file.getName(), context));
+                    db.insert(DBHelper.CONTACTS_TABLE_NAME, null, cv);
+                } else if (isContactExist(file.getName())
+                        && Utils.isContactNameInContacts(file.getName(), context)) {
+                    ContentValues cv = new ContentValues();
+                    cv.put(DBHelper.CF_CONTACT_NAME, Utils.getContactName(file.getName(), context));
+                    if (Utils.isContactImageSet(file.getName(), context)) {
+                        cv.put(CF_CONTACT_IMAGE_URI, Utils.getContactImage(file.getName(), context));
+                    }
+                    db.update(DBHelper.CONTACTS_TABLE_NAME, cv,
+                            DBHelper.CF_CONTACT_NUMBER + " = ?", new String[]{file.getName()});
                 }
-                db.update(DBHelper.CONTACTS_TABLE_NAME, cv,
-                        DBHelper.CF_CONTACT_NUMBER + " = ?", new String[]{file.getName()});
-            }
 
-            File[] records = file.listFiles();
-            if (records != null && records.length > 0) {
-                for (File record : records) {
-                    if (record.isFile() && record.getName().contains(".")) {
-                        if (!isRecordExist(record.getPath())) {
-                            addRecordToDb(record);
-                        } else if (isRecordExist(record.getPath())) {
-                            File contactNumber = new File(record.getParent());
-                            if (Utils.isContactImageSet(contactNumber.getName(), context)) {
-                                insertContactImageUriToRecord(record.getPath(), Utils.getContactImage(contactNumber.getName(), context));
+                File[] records = file.listFiles();
+                if (records != null && records.length > 0) {
+                    for (File record : records) {
+                        if (record.isFile() && record.getName().contains(".")) {
+                            if (!isRecordExist(record.getPath())) {
+                                addRecordToDb(record);
+                            } else if (isRecordExist(record.getPath())) {
+                                File contactNumber = new File(record.getParent());
+                                if (Utils.isContactImageSet(contactNumber.getName(), context)) {
+                                    insertContactImageUriToRecord(record.getPath(), Utils.getContactImage(contactNumber.getName(), context));
+                                }
                             }
                         }
                     }
@@ -150,7 +151,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 date.get(Calendar.MINUTE),
                 date.get(Calendar.SECOND));
         int isIncoming = 0;
-        if (file.getName().endsWith("I")) {
+        if (file.getName().contains("I")) {
             isIncoming = 1;
         }
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
@@ -200,15 +201,16 @@ public class DBHelper extends SQLiteOpenHelper {
                 contact.setContactNumber(cursor.getString(cursor.getColumnIndex(CF_CONTACT_NUMBER)));
                 contact.setContactName(cursor.getString(cursor.getColumnIndex(CF_CONTACT_NAME)));
                 contact.setContactImageUri(cursor.getString(cursor.getColumnIndex(CF_CONTACT_IMAGE_URI)));
-                contact.setRecords(getRecordForContact(String.valueOf(contact.getId())));
+                contact.setRecords(getRecordsForContact(String.valueOf(contact.getId())));
 
                 contacts.add(contact);
             } while (cursor.moveToNext());
+            cursor.close();
         }
         return contacts;
     }
 
-    private ArrayList<Record> getRecordForContact(String contactUUID) {
+    public ArrayList<Record> getRecordsForContact(String contactUUID) {
         SQLiteDatabase db = getReadableDatabase();
         ArrayList<Record> records = new ArrayList<>();
         String selection = RF_UUID_CONTACT + " =?";
@@ -248,30 +250,46 @@ public class DBHelper extends SQLiteOpenHelper {
     public ArrayList<Record> getIncomingRecords() {
         SQLiteDatabase db = getReadableDatabase();
         ArrayList<Record> records = new ArrayList<>();
-        Cursor cursor = db.rawQuery("select * from " + RECORDS_TABLE_NAME, null);
-        if (cursor.getCount() != 0) {
-            cursor.moveToFirst();
+        String selection = RF_IS_INCOMING + " =?";
+        String[] selectionArgs = {"1"};
+        Cursor corsor = db.query(
+                RECORDS_TABLE_NAME,
+                null,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null);
+
+        if (corsor.getCount() != 0) {
+            corsor.moveToFirst();
             do {
-                Record record = constructRecord(cursor);
-                if (record.getRecordFileName().contains("I")) {
-                    records.add(record);
-                }
-            } while (cursor.moveToNext());
+                Record record = constructRecord(corsor);
+                records.add(record);
+            } while (corsor.moveToNext());
         }
         return records;
     }
     public ArrayList<Record> getOutgoingRecords() {
         SQLiteDatabase db = getReadableDatabase();
         ArrayList<Record> records = new ArrayList<>();
-        Cursor cursor = db.rawQuery("select * from " + RECORDS_TABLE_NAME, null);
-        if (cursor.getCount() != 0) {
-            cursor.moveToFirst();
+        String selection = RF_IS_INCOMING + " =?";
+        String[] selectionArgs = {"0"};
+        Cursor corsor = db.query(
+                RECORDS_TABLE_NAME,
+                null,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null);
+
+        if (corsor.getCount() != 0) {
+            corsor.moveToFirst();
             do {
-                Record record = constructRecord(cursor);
-                if (!record.getRecordFileName().contains("I")) {
-                    records.add(record);
-                }
-            } while (cursor.moveToNext());
+                Record record = constructRecord(corsor);
+                records.add(record);
+            } while (corsor.moveToNext());
         }
         return records;
     }
@@ -309,8 +327,10 @@ public class DBHelper extends SQLiteOpenHelper {
                 null);
 
         corsor.moveToFirst();
+        String contactUUID = corsor.getString(0);
+        corsor.close();
 
-        return corsor.getString(0);
+        return contactUUID;
     }
 
     public void insertContactImageUriToRecord(String recordPath, String contactNameImageUri) {
@@ -336,7 +356,10 @@ public class DBHelper extends SQLiteOpenHelper {
                                 null,
                                 null);
 
-        return corsor.moveToFirst();
+        boolean isExist = corsor.moveToFirst();
+        corsor.close();
+
+        return isExist;
     }
 
     public boolean isRecordExist(String recordPath) {
@@ -353,6 +376,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 null,
                 null);
 
-        return corsor.moveToFirst();
+        boolean isExist = corsor.moveToFirst();
+        corsor.close();
+
+        return isExist;
     }
 }

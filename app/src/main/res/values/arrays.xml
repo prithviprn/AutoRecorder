@@ -5,7 +5,6 @@
         <item>Voice call</item>
         <item>Voice communication</item>
         <item>Voice call downlink</item>
-        <item>Voice recognition</item>
         <item>Voice call uplink</item>
     </string-array>
     <string-array name="values_source_type">
@@ -13,24 +12,19 @@
         <item>4</item>
         <item>7</item>
         <item>3</item>
-        <item>6</item>
         <item>2</item>
     </string-array>
     <string-array name="pref_audio_source_format">
         <item>3GP</item>
         <item>MPEG4</item>
-        <item>WEBM</item>
-        <item>AAC ADTS</item>
-        <item>AMR NB</item>
-        <item>AMR WB</item>
+        <item>AAC</item>
+        <item>AMR</item>
     </string-array>
     <string-array name="values_source_format">
         <item>1</item>
         <item>2</item>
-        <item>9</item>
         <item>6</item>
         <item>3</item>
-        <item>4</item>
     </string-array>
     <string-array name="pref_audio_duration">
         <item>0</item>

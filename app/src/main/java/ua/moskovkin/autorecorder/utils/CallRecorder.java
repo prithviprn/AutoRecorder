@@ -34,6 +34,7 @@ public class CallRecorder {
             mRecorder.stop();
             mRecorder.reset();
             mRecorder.release();
+            mRecorder = null;
         } catch (Exception e) {
             e.printStackTrace();
         }
