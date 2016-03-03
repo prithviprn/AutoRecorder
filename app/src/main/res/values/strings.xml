@@ -47,4 +47,7 @@
     <string name="permission_read_contacts">Read Contacts</string>
     <string name="permision_record_audio">Record Audio</string>
     <string name="permission_read_phone_state">Read Phone State</string>
+    <string name="delete_older_than_days">Delete records older than</string>
+    <string name="delete_older_than_days_summary">Select 0 to disable</string>
+    <string name="days">days</string>
 </resources>

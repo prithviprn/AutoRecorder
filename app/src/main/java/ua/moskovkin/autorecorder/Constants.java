@@ -15,5 +15,6 @@ public class Constants {
     public static final String SETTING_AUDIO_FORMAT_KEY = "audio_format";
     public static final String SETTING_INTERNAL_PLAYER_KEY = "internal_player";
     public static final String SETTING_PASS_PROTECTION_KEY = "pass_protection";
+    public static final String SETTING_DELETE_RECORDS_OLDER_THAN_KEY = "delete_older_than";
     public static final int DIR_LENGTH = 10;
 }

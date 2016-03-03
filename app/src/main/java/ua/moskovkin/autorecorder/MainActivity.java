@@ -21,6 +21,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.io.File;
+import java.util.GregorianCalendar;
 
 import ua.moskovkin.autorecorder.fragments.RecorderFragment;
 import ua.moskovkin.autorecorder.fragments.RecorderListFragment;
@@ -79,6 +80,11 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
 
         dbHelper = new DBHelper(context);
         dbHelper.addContactNumbersAndRecordsToDb(appFolder.getPath());
+
+        int maxDays = Integer.parseInt(settings.getString(Constants.SETTING_DELETE_RECORDS_OLDER_THAN_KEY, "0"));
+        if (maxDays != 0) {
+            dbHelper.deleteRecordsOlderThan(GregorianCalendar.getInstance(), maxDays);
+        }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_menu);

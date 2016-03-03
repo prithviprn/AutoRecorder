@@ -28,6 +28,7 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
     private Preference askForPinPreference;
     private SharedPreferences defaultPreference;
     private ListPreference minDurationPreference;
+    private ListPreference maxValidDatePreference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,6 +102,20 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
                     return true;
                 }
             });
+            maxValidDatePreference = (ListPreference) findPreference(Constants.SETTING_DELETE_RECORDS_OLDER_THAN_KEY);
+            maxValidDatePreference.setTitle(getString(R.string.delete_older_than_days)
+                    + " ("
+                    + defaultPreference.getString(Constants.SETTING_DELETE_RECORDS_OLDER_THAN_KEY, "0")
+                    + ") "+ getString(R.string.days));
+            maxValidDatePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    preference.setTitle(getString(R.string.delete_older_than_days)
+                            + " (" + newValue + ") " + getString(R.string.days));
+                    return true;
+                }
+            });
+
         } else if ("cloud".equals(settings)) {
             addPreferencesFromResource(R.xml.cloud_settings);
         }

@@ -38,4 +38,13 @@
         android:entryValues="@array/pref_audio_duration"
         android:defaultValue="0"
         android:summary="@string/recording_duration_hint"/>
+
+    <ListPreference
+        android:key="delete_older_than"
+        android:title="@string/delete_older_than_days"
+        android:dialogTitle="@string/min_duration_dialog"
+        android:entries="@array/delete_older_than_days"
+        android:entryValues="@array/delete_older_than_days"
+        android:defaultValue="0"
+        android:summary="@string/delete_older_than_days_summary"/>
 </PreferenceScreen>

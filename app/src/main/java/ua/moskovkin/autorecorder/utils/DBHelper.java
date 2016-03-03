@@ -200,6 +200,27 @@ public class DBHelper extends SQLiteOpenHelper {
         db.update(RECORDS_TABLE_NAME, cv, selection, selectionArgs);
     }
 
+    public void deleteRecordsOlderThan(Calendar date, int maxDays) {
+        ArrayList<Record> records = getAllRecords();
+        SQLiteDatabase db = getWritableDatabase();
+
+        for (Record record : records) {
+            if (record.getInFavorite() == 0) {
+                String[] path = record.getRecordPath().split("/");
+                GregorianCalendar recordCreationDate = Utils.getCalendarFromFile(path);
+                long delta = date.getTimeInMillis() - recordCreationDate.getTimeInMillis();
+                int days = (int) (delta / (1000 * 60 * 60 * 24));
+                String selection = RF_UUID + " =?";
+                String[] selectionArgs = {String.valueOf(record.getId())};
+                if (days >= maxDays) {
+                    db.delete(RECORDS_TABLE_NAME, selection, selectionArgs);
+                    new File(record.getRecordPath()).delete();
+                }
+            }
+        }
+        db.close();
+    }
+
     public ArrayList<Record> getRecordsForContact(String contactUUID) {
         SQLiteDatabase db = getReadableDatabase();
         ArrayList<Record> records = new ArrayList<>();
