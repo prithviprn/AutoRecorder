@@ -50,23 +50,23 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
         context = this;
 
         settings = PreferenceManager.getDefaultSharedPreferences(this);
-        if (settings.getBoolean("pass_protection", false)) {
+        if (settings.getBoolean(Constants.SETTING_PASS_PROTECTION_KEY, false)) {
             Intent i = new Intent(this, PassActivity.class);
             startActivityForResult(i, PASS_REQUEST);
         }
-        if (settings.getString("app_save_path", "empty").equals("empty")) {
+        if (settings.getString(Constants.SETTING_APP_SAVE_PATH_KEY, "empty").equals("empty")) {
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_UNMOUNTED)) {
-                settings.edit().putString("app_save_path", Environment
+                settings.edit().putString(Constants.SETTING_APP_SAVE_PATH_KEY, Environment
                         .getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
                         + File.separator + getString(R.string.app_name)).apply();
             } else {
-                settings.edit().putString("app_save_path", Environment
+                settings.edit().putString(Constants.SETTING_APP_SAVE_PATH_KEY, Environment
                         .getExternalStorageDirectory().getAbsolutePath()
                         + File.separator + getString(R.string.app_name)).apply();
             }
         }
         fm = getSupportFragmentManager();
-        appFolder = new File(settings.getString("app_save_path",
+        appFolder = new File(settings.getString(Constants.SETTING_APP_SAVE_PATH_KEY,
                 Environment.getExternalStorageDirectory().getAbsolutePath()
                         + File.separator + getString(R.string.app_name)));
         if(!appFolder.exists()) {

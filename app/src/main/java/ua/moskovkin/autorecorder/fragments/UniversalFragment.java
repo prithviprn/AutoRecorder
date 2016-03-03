@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import ua.moskovkin.autorecorder.Constants;
 import ua.moskovkin.autorecorder.R;
 import ua.moskovkin.autorecorder.model.Record;
 import ua.moskovkin.autorecorder.utils.DBHelper;
@@ -100,6 +101,7 @@ public class UniversalFragment extends Fragment {
         private TextView mFileSIzeTextView;
         private ImageView mContactImage;
         private ImageView mCallState;
+        private ImageView mIsFavorite;
         private Record record;
 
         public RecorderHolder(View itemView) {
@@ -112,9 +114,10 @@ public class UniversalFragment extends Fragment {
             mContactImage = (ImageView) itemView.findViewById(R.id.contact_image_view);
             mCallState = (ImageView) itemView.findViewById(R.id.call_state_icon);
             mFileSIzeTextView = (TextView) itemView.findViewById(R.id.file_size_text_view);
+            mIsFavorite = (ImageView) itemView.findViewById(R.id.is_favorite);
         }
 
-        public void bindRecorderItem(Record record) {
+        public void bindRecorderItem(final Record record) {
 
             this.record = record;
 
@@ -145,11 +148,30 @@ public class UniversalFragment extends Fragment {
             }
 
             mFileSIzeTextView.setText(String.format("%s kB", record.getFileSize()));
+            mIsFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (record.getInFavorite() == 0) {
+                        mIsFavorite.setImageResource(R.mipmap.ic_star_black);
+                        record.setInFavorite(1);
+                        dbHelper.changeIsFavoriteState(record, 1);
+                    } else {
+                        mIsFavorite.setImageResource(R.mipmap.ic_star_border);
+                        record.setInFavorite(0);
+                        dbHelper.changeIsFavoriteState(record, 0);
+                    }
+                }
+            });
+            if (record.getInFavorite() == 0) {
+                mIsFavorite.setImageResource(R.mipmap.ic_star_border);
+            } else {
+                mIsFavorite.setImageResource(R.mipmap.ic_star_black);
+            }
         }
 
         @Override
         public void onClick(View v) {
-            Utils.playRecord(record.getRecordPath(), settings.getBoolean("internal_player", true),
+            Utils.playRecord(record.getRecordPath(), settings.getBoolean(Constants.SETTING_INTERNAL_PLAYER_KEY, true),
                     getActivity().getSupportFragmentManager(), getActivity());
         }
     }

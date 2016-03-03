@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import ua.moskovkin.autorecorder.Constants;
 import ua.moskovkin.autorecorder.R;
 import ua.moskovkin.autorecorder.model.Record;
 import ua.moskovkin.autorecorder.utils.DBHelper;
@@ -103,7 +104,7 @@ public class RecorderFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            Utils.playRecord(record.getRecordPath(), settings.getBoolean("internal_player", true),
+            Utils.playRecord(record.getRecordPath(), settings.getBoolean(Constants.SETTING_INTERNAL_PLAYER_KEY, true),
                     getActivity().getSupportFragmentManager(), getActivity());
         }
     }

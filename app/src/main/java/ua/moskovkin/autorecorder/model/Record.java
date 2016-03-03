@@ -15,6 +15,7 @@ public class Record {
     private int hours;
     private int minutes;
     private int seconds;
+    private int inFavorite;
 
     public Record() {}
 
@@ -33,6 +34,7 @@ public class Record {
         this.hours = hours;
         this.minutes = minutes;
         this.seconds = seconds;
+        inFavorite = 0;
     }
 
     public UUID getId() {
@@ -129,5 +131,13 @@ public class Record {
 
     public void setRecordPath(String recordPath) {
         this.recordPath = recordPath;
+    }
+
+    public int getInFavorite() {
+        return inFavorite;
+    }
+
+    public void setInFavorite(int inFavorite) {
+        this.inFavorite = inFavorite;
     }
 }

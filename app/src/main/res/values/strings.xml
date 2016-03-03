@@ -43,4 +43,8 @@
     <string name="ask_to_save_record">Ask before saving record</string>
     <string name="ask_to_save_record_summary">Ask whether to keep or delete recording after each call</string>
     <string name="save_record_dialog_title">Save this record</string>
+    <string name="permission_sd_card">SD Card</string>
+    <string name="permission_read_contacts">Read Contacts</string>
+    <string name="permision_record_audio">Record Audio</string>
+    <string name="permission_read_phone_state">Read Phone State</string>
 </resources>

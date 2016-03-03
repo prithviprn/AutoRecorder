@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.media.MediaRecorder;
 import android.preference.PreferenceManager;
 
+import ua.moskovkin.autorecorder.Constants;
+
 public class CallRecorder {
     private MediaRecorder mRecorder = null;
     private String mFilePath;
@@ -17,8 +19,8 @@ public class CallRecorder {
 
     public void startRecording() {
         mRecorder = new MediaRecorder();
-        mRecorder.setAudioSource(Integer.parseInt(settings.getString("audio_source", "1")));
-        mRecorder.setOutputFormat(Integer.parseInt(settings.getString("audio_format", "1")));
+        mRecorder.setAudioSource(Integer.parseInt(settings.getString(Constants.SETTING_AUDIO_SOURCE_KEY, "1")));
+        mRecorder.setOutputFormat(Integer.parseInt(settings.getString(Constants.SETTING_AUDIO_FORMAT_KEY, "1")));
         mRecorder.setOutputFile(mFilePath);
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
         try {

@@ -37,7 +37,7 @@ public class RecorderPhoneStateListener extends PhoneStateListener {
         this.context = context;
         this.intent = intent;
         settings = PreferenceManager.getDefaultSharedPreferences(context);
-        minDuration = Long.parseLong(settings.getString("record_duration", Constants.MIN_DURATION));
+        minDuration = Long.parseLong(settings.getString(Constants.SETTING_MIN_RECORD_DURATION_KEY, Constants.MIN_RECORD_DURATION));
         mmr = new MediaMetadataRetriever();
     }
 
@@ -68,7 +68,7 @@ public class RecorderPhoneStateListener extends PhoneStateListener {
                     } else {
                         dirName = number;
                     }
-                    File path = new File(settings.getString("app_save_path",
+                    File path = new File(settings.getString(Constants.SETTING_APP_SAVE_PATH_KEY,
                             Environment.getExternalStorageDirectory().getAbsolutePath()), dirName);
                     if(!path.exists()) {
                         path.mkdirs();
@@ -96,7 +96,7 @@ public class RecorderPhoneStateListener extends PhoneStateListener {
                             file.delete();
                         }
                     }
-                    if (settings.getBoolean("ask_to_save", false)) {
+                    if (settings.getBoolean(Constants.SETTING_ASK_TO_SAVE_KEY, false)) {
                         Intent intent = new Intent(context, SaveRecordDialogActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("filePath", mRecorder.getFilePath());
@@ -105,6 +105,9 @@ public class RecorderPhoneStateListener extends PhoneStateListener {
                     mRecorder = null;
                     isIncomingCall = false;
                     context.stopService(new Intent(context, CallRecorderService.class));
+                } else {
+                    context.stopService(new Intent(context, CallRecorderService.class));
+                    isIncomingCall = false;
                 }
                 break;
         }
@@ -137,31 +140,23 @@ public class RecorderPhoneStateListener extends PhoneStateListener {
     }
 
     private String getFileExtension() {
-        String extension = settings.getString("audio_format", "1");
+        String extension = settings.getString(Constants.SETTING_AUDIO_FORMAT_KEY, "1");
         String fileExtension = null;
         switch (extension) {
             case "1": {
-                fileExtension = ".3gp";
+                fileExtension = Constants.EXTENSION_3GP;
                 break;
             }
             case "2": {
-                fileExtension = ".mp4";
+                fileExtension = Constants.EXTENSION_MP4;
                 break;
             }
             case "3": {
-                fileExtension = ".amr";
-                break;
-            }
-            case "4": {
-                fileExtension = ".amr";
+                fileExtension = Constants.EXTENSION_AMR;
                 break;
             }
             case "6": {
-                fileExtension = ".aac";
-                break;
-            }
-            case "9": {
-                fileExtension = ".webm";
+                fileExtension = Constants.EXTENSION_AAC;
                 break;
             }
         }

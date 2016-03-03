@@ -18,8 +18,8 @@ import ua.moskovkin.autorecorder.model.Contact;
 import ua.moskovkin.autorecorder.model.Record;
 
 public class DBHelper extends SQLiteOpenHelper {
-    public static final String DB_NAME = "AutoRecorder";
     public static final int DB_VERSION = 1;
+    public static final String DB_NAME = "AutoRecorder";
     public static final String TEXT_FIELD_COMA = " text,";
     public static final String TEXT_FIELD = " text";
     public static final String INTEGER_FIELD_COMA = " integer,";
@@ -45,8 +45,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String RF_DURATION_HOURS = "hours";
     public static final String RF_DURATION_MINUTES = "minutes";
     public static final String RF_DURATION_SECONDS = "seconds";
+    public static final String RF_IN_FAVORITE = "in_favorite";
     private Context context;
-
 
     public DBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -77,7 +77,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 + RF_IS_INCOMING + INTEGER_FIELD_COMA
                 + RF_DURATION_HOURS + INTEGER_FIELD_COMA
                 + RF_DURATION_MINUTES + INTEGER_FIELD_COMA
-                + RF_DURATION_SECONDS + INTEGER_FIELD
+                + RF_DURATION_SECONDS + INTEGER_FIELD_COMA
+                + RF_IN_FAVORITE + INTEGER_FIELD
                 + ");");
     }
 
@@ -185,29 +186,18 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(RF_DURATION_HOURS, record.getHours());
         cv.put(RF_DURATION_MINUTES, record.getMinutes());
         cv.put(RF_DURATION_SECONDS, record.getSeconds());
+        cv.put(RF_IN_FAVORITE, record.getInFavorite());
 
         db.insert(DBHelper.RECORDS_TABLE_NAME, null, cv);
     }
 
-    public ArrayList<Contact> getAllContacts() {
-        SQLiteDatabase db = getReadableDatabase();
-        ArrayList<Contact> contacts = new ArrayList<>();
-        Cursor cursor = db.rawQuery("select * from " + CONTACTS_TABLE_NAME, null);
-        if (cursor.getCount() != 0) {
-            cursor.moveToFirst();
-            do {
-                Contact contact = new Contact();
-                contact.setId(UUID.fromString(cursor.getString(cursor.getColumnIndex(CF_UUID))));
-                contact.setContactNumber(cursor.getString(cursor.getColumnIndex(CF_CONTACT_NUMBER)));
-                contact.setContactName(cursor.getString(cursor.getColumnIndex(CF_CONTACT_NAME)));
-                contact.setContactImageUri(cursor.getString(cursor.getColumnIndex(CF_CONTACT_IMAGE_URI)));
-                contact.setRecords(getRecordsForContact(String.valueOf(contact.getId())));
-
-                contacts.add(contact);
-            } while (cursor.moveToNext());
-            cursor.close();
-        }
-        return contacts;
+    public void changeIsFavoriteState(Record record, int state) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(RF_IN_FAVORITE, state);
+        String selection = RF_UUID + " =?";
+        String[] selectionArgs = {String.valueOf(record.getId())};
+        db.update(RECORDS_TABLE_NAME, cv, selection, selectionArgs);
     }
 
     public ArrayList<Record> getRecordsForContact(String contactUUID) {
@@ -231,6 +221,27 @@ public class DBHelper extends SQLiteOpenHelper {
             } while (corsor.moveToNext());
         }
         return records;
+    }
+
+    public ArrayList<Contact> getAllContacts() {
+        SQLiteDatabase db = getReadableDatabase();
+        ArrayList<Contact> contacts = new ArrayList<>();
+        Cursor cursor = db.rawQuery("select * from " + CONTACTS_TABLE_NAME, null);
+        if (cursor.getCount() != 0) {
+            cursor.moveToFirst();
+            do {
+                Contact contact = new Contact();
+                contact.setId(UUID.fromString(cursor.getString(cursor.getColumnIndex(CF_UUID))));
+                contact.setContactNumber(cursor.getString(cursor.getColumnIndex(CF_CONTACT_NUMBER)));
+                contact.setContactName(cursor.getString(cursor.getColumnIndex(CF_CONTACT_NAME)));
+                contact.setContactImageUri(cursor.getString(cursor.getColumnIndex(CF_CONTACT_IMAGE_URI)));
+                contact.setRecords(getRecordsForContact(String.valueOf(contact.getId())));
+
+                contacts.add(contact);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        return contacts;
     }
 
     public ArrayList<Record> getAllRecords() {
@@ -270,6 +281,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return records;
     }
+
     public ArrayList<Record> getOutgoingRecords() {
         SQLiteDatabase db = getReadableDatabase();
         ArrayList<Record> records = new ArrayList<>();
@@ -294,24 +306,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return records;
     }
 
-    private Record constructRecord(Cursor cursor) {
-        Record record = new Record();
-        record.setId(UUID.fromString(cursor.getString(cursor.getColumnIndex(RF_UUID))));
-        record.setContactId(cursor.getString(cursor.getColumnIndex(RF_UUID_CONTACT)));
-        record.setRecordNumber(cursor.getString(cursor.getColumnIndex(RF_RECORD_NUMBER)));
-        record.setRecordFileName(cursor.getString(cursor.getColumnIndex(RF_RECORD_FILE_NAME)));
-        record.setRecordPath(cursor.getString(cursor.getColumnIndex(RF_RECORD_PATH)));
-        record.setFileSize(cursor.getString(cursor.getColumnIndex(RF_FILE_SIZE)));
-        record.setContactImageUri(cursor.getString(cursor.getColumnIndex(RF_CONTACT_IMAGE_URI)));
-        record.setDate(cursor.getString(cursor.getColumnIndex(RF_DATE)));
-        record.setIsIncoming(cursor.getInt(cursor.getColumnIndex(RF_IS_INCOMING)));
-        record.setHours(cursor.getInt(cursor.getColumnIndex(RF_DURATION_HOURS)));
-        record.setMinutes(cursor.getInt(cursor.getColumnIndex(RF_DURATION_MINUTES)));
-        record.setSeconds(cursor.getInt(cursor.getColumnIndex(RF_DURATION_SECONDS)));
-
-        return record;
-    }
-
     public String getContactUUID(String contactNumber) {
         SQLiteDatabase db = getReadableDatabase();
         String[] column = {CF_UUID};
@@ -331,6 +325,25 @@ public class DBHelper extends SQLiteOpenHelper {
         corsor.close();
 
         return contactUUID;
+    }
+
+    private Record constructRecord(Cursor cursor) {
+        Record record = new Record();
+        record.setId(UUID.fromString(cursor.getString(cursor.getColumnIndex(RF_UUID))));
+        record.setContactId(cursor.getString(cursor.getColumnIndex(RF_UUID_CONTACT)));
+        record.setRecordNumber(cursor.getString(cursor.getColumnIndex(RF_RECORD_NUMBER)));
+        record.setRecordFileName(cursor.getString(cursor.getColumnIndex(RF_RECORD_FILE_NAME)));
+        record.setRecordPath(cursor.getString(cursor.getColumnIndex(RF_RECORD_PATH)));
+        record.setFileSize(cursor.getString(cursor.getColumnIndex(RF_FILE_SIZE)));
+        record.setContactImageUri(cursor.getString(cursor.getColumnIndex(RF_CONTACT_IMAGE_URI)));
+        record.setDate(cursor.getString(cursor.getColumnIndex(RF_DATE)));
+        record.setIsIncoming(cursor.getInt(cursor.getColumnIndex(RF_IS_INCOMING)));
+        record.setHours(cursor.getInt(cursor.getColumnIndex(RF_DURATION_HOURS)));
+        record.setMinutes(cursor.getInt(cursor.getColumnIndex(RF_DURATION_MINUTES)));
+        record.setSeconds(cursor.getInt(cursor.getColumnIndex(RF_DURATION_SECONDS)));
+        record.setInFavorite(cursor.getInt(cursor.getColumnIndex(RF_IN_FAVORITE)));
+
+        return record;
     }
 
     public void insertContactImageUriToRecord(String recordPath, String contactNameImageUri) {

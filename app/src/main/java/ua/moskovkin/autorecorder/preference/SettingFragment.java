@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import java.io.File;
 
+import ua.moskovkin.autorecorder.Constants;
 import ua.moskovkin.autorecorder.R;
 
 public class SettingFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -36,7 +37,7 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         String settings = getArguments().getString("category");
         if ("general".equals(settings)) {
             addPreferencesFromResource(R.xml.general_settings);
-            askForPinPreference = findPreference("pass_protection");
+            askForPinPreference = findPreference(Constants.SETTING_PASS_PROTECTION_KEY);
             askForPinPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(final Preference preference, Object newValue) {
@@ -76,8 +77,8 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
             });
         } else if ("recording".equals(settings)) {
             addPreferencesFromResource(R.xml.recording_settings);
-            dirPreference = findPreference("app_save_path");
-            dirPreference.setSummary(defaultPreference.getString("app_save_path",
+            dirPreference = findPreference(Constants.SETTING_APP_SAVE_PATH_KEY);
+            dirPreference.setSummary(defaultPreference.getString(Constants.SETTING_APP_SAVE_PATH_KEY,
                     Environment.getExternalStorageDirectory().getAbsolutePath()
                             + File.separator + getString(R.string.app_name)));
             dirPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -88,9 +89,9 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
                 }
             });
 
-            minDurationPreference = (ListPreference) findPreference("record_duration");
+            minDurationPreference = (ListPreference) findPreference(Constants.SETTING_MIN_RECORD_DURATION_KEY);
             minDurationPreference.setTitle(getString(R.string.min_rec_duration)
-                    + " (" + defaultPreference.getString("record_duration", "0")
+                    + " (" + defaultPreference.getString(Constants.SETTING_MIN_RECORD_DURATION_KEY, "0")
                     + ")");
             minDurationPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
@@ -111,7 +112,8 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
 
             if (resultCode == Activity.RESULT_OK) {
                 dirPreference.setSummary(data.getStringExtra("path"));
-                dirPreference.getEditor().putString("app_save_path", data.getStringExtra("path")).commit();
+                dirPreference.getEditor().putString(Constants.SETTING_APP_SAVE_PATH_KEY,
+                        data.getStringExtra("path")).commit();
             }
         }
     }

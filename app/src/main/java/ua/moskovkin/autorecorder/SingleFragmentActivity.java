@@ -48,13 +48,13 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
 
             final List<String> permissionsList = new ArrayList<>();
             if (!addPermission(permissionsList, Manifest.permission.WRITE_EXTERNAL_STORAGE))
-                permissionsNeeded.add("SD Card");
+                permissionsNeeded.add(getString(R.string.permission_sd_card));
             if (!addPermission(permissionsList, Manifest.permission.READ_CONTACTS))
-                permissionsNeeded.add("Read Contacts");
+                permissionsNeeded.add(getString(R.string.permission_read_contacts));
             if (!addPermission(permissionsList, Manifest.permission.RECORD_AUDIO))
-                permissionsNeeded.add("Record Audio");
+                permissionsNeeded.add(getString(R.string.permision_record_audio));
             if (!addPermission(permissionsList, Manifest.permission.READ_PHONE_STATE))
-                permissionsNeeded.add("Read Phone State");
+                permissionsNeeded.add(getString(R.string.permission_read_phone_state));
 
             if (permissionsList.size() > 0) {
                 if (permissionsNeeded.size() > 0) {
