@@ -126,6 +126,26 @@ public class DBHelper extends SQLiteOpenHelper {
         db.insert(EXCLUDED_NUMBERS_TABLE, null, cv);
     }
 
+    public boolean isNumberInExcludedList(String number) {
+        SQLiteDatabase db = getWritableDatabase();
+        String selection = EX_NUMBER + " =?";
+        String[] selectionArgs = {number};
+        Cursor cursor = db.query(EXCLUDED_NUMBERS_TABLE,
+                null,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null);
+        if (cursor.moveToFirst()) {
+            cursor.close();
+            return true;
+        } else {
+            cursor.close();
+            return false;
+        }
+    }
+
     public void removeExcludedNumber(String number) {
         SQLiteDatabase db = getWritableDatabase();
         String selection = EX_NUMBER + " =?";
