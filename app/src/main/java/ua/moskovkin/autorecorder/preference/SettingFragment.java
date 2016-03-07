@@ -21,20 +21,25 @@ import java.io.File;
 
 import ua.moskovkin.autorecorder.Constants;
 import ua.moskovkin.autorecorder.R;
+import ua.moskovkin.autorecorder.utils.DBHelper;
 
 public class SettingFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
-    private static final int DIR_CHOSEN = 177;
+    private static final int DIR_CHOSEN = 1;
+    private static final int ADD_EXCLUDED_NUMBERS = 2;
+    private DBHelper dbHelper;
     private Preference dirPreference;
     private Preference askForPinPreference;
     private SharedPreferences defaultPreference;
     private ListPreference minDurationPreference;
     private ListPreference maxValidDatePreference;
+    private Preference excludedNumbersPreference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         defaultPreference = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        dbHelper = new DBHelper(getActivity());
         String settings = getArguments().getString("category");
         if ("general".equals(settings)) {
             addPreferencesFromResource(R.xml.general_settings);
@@ -106,12 +111,22 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
             maxValidDatePreference.setTitle(getString(R.string.delete_older_than_days)
                     + " ("
                     + defaultPreference.getString(Constants.SETTING_DELETE_RECORDS_OLDER_THAN_KEY, "0")
-                    + ") "+ getString(R.string.days));
+                    + ") " + getString(R.string.days));
             maxValidDatePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     preference.setTitle(getString(R.string.delete_older_than_days)
                             + " (" + newValue + ") " + getString(R.string.days));
+                    return true;
+                }
+            });
+            excludedNumbersPreference = findPreference(Constants.SETTING_EXCLUDED_NUMBERS_KEY);
+            excludedNumbersPreference.setTitle(getString(R.string.excluded_numbers) + " ("
+                    + dbHelper.getExcludedNumbers().size() + ")");
+            excludedNumbersPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    startActivityForResult(new Intent(getActivity(), ExcludedNumbersActivity.class), ADD_EXCLUDED_NUMBERS);
                     return true;
                 }
             });
@@ -123,13 +138,13 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == DIR_CHOSEN) {
-
-            if (resultCode == Activity.RESULT_OK) {
-                dirPreference.setSummary(data.getStringExtra("path"));
-                dirPreference.getEditor().putString(Constants.SETTING_APP_SAVE_PATH_KEY,
-                        data.getStringExtra("path")).commit();
-            }
+        if (requestCode == DIR_CHOSEN && resultCode == Activity.RESULT_OK) {
+            dirPreference.setSummary(data.getStringExtra("path"));
+            dirPreference.getEditor().putString(Constants.SETTING_APP_SAVE_PATH_KEY,
+                    data.getStringExtra("path")).commit();
+        }else if (requestCode == ADD_EXCLUDED_NUMBERS) {
+            excludedNumbersPreference.setTitle(getString(R.string.excluded_numbers) + " ("
+                                            + dbHelper.getExcludedNumbers().size() + ")");
         }
     }
 

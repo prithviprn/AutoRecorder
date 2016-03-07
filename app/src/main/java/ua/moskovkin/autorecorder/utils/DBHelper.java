@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.media.MediaMetadataRetriever;
+import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.UUID;
 
+import ua.moskovkin.autorecorder.Constants;
 import ua.moskovkin.autorecorder.model.Contact;
 import ua.moskovkin.autorecorder.model.Record;
 
@@ -46,6 +48,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String RF_DURATION_MINUTES = "minutes";
     public static final String RF_DURATION_SECONDS = "seconds";
     public static final String RF_IN_FAVORITE = "in_favorite";
+    public static final String EXCLUDED_NUMBERS_TABLE = "excluded_numbers";
+    public static final String EX_ID = "id";
+    public static final String EX_NUMBER = "number";
     private Context context;
 
     public DBHelper(Context context) {
@@ -80,11 +85,52 @@ public class DBHelper extends SQLiteOpenHelper {
                 + RF_DURATION_SECONDS + INTEGER_FIELD_COMA
                 + RF_IN_FAVORITE + INTEGER_FIELD
                 + ");");
+
+        db.execSQL("create table " + EXCLUDED_NUMBERS_TABLE + " ("
+                + EX_ID + PRIMARY_KEY
+                + EX_NUMBER + TEXT_FIELD
+                + ");");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+    }
+
+    public ArrayList<String> getExcludedNumbers() {
+        SQLiteDatabase db = getReadableDatabase();
+        ArrayList<String> numbers = new ArrayList<>();
+        Cursor corsor = db.query(
+                EXCLUDED_NUMBERS_TABLE,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+
+        if (corsor.getCount() > 0) {
+            corsor.moveToFirst();
+            do {
+                numbers.add(corsor.getString(corsor.getColumnIndex(EX_NUMBER)));
+            } while (corsor.moveToNext());
+        }
+        corsor.close();
+        return numbers;
+    }
+
+    public void insertExcludedNumber(String number) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(EX_NUMBER, number);
+        db.insert(EXCLUDED_NUMBERS_TABLE, null, cv);
+    }
+
+    public void removeExcludedNumber(String number) {
+        SQLiteDatabase db = getWritableDatabase();
+        String selection = EX_NUMBER + " =?";
+        String[] selectionArgs = {number};
+        db.delete(EXCLUDED_NUMBERS_TABLE, selection, selectionArgs);
     }
 
     public void addContactNumbersAndRecordsToDb(String path) {
@@ -214,7 +260,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 String[] selectionArgs = {String.valueOf(record.getId())};
                 if (days >= maxDays) {
                     db.delete(RECORDS_TABLE_NAME, selection, selectionArgs);
-                    new File(record.getRecordPath()).delete();
+                    boolean deleted = new File(record.getRecordPath()).delete();
+                    Log.d(Constants.DEBUG_TAG, "file deleted " + deleted);
                 }
             }
         }

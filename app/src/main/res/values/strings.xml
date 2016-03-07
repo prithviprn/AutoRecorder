@@ -15,12 +15,12 @@
     <string name="recording_settings">Recording</string>
     <string name="recording_directory">Recording Directory</string>
     <string name="audio_source">Audio Source</string>
-    <string name="recording_duration_hint">Records shorter than this duration in seconds will be deleted. If "0" - disabled</string>
+    <string name="recording_duration_hint">Records shorter than this duration in seconds will be deleted. Select 0 to disable.</string>
     <string name="select_source">Select Source</string>
     <string name="audio_format">Audio Format</string>
     <string name="select_audio_format">Select Audio Format</string>
     <string name="min_rec_duration">Delete short recordings</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="new_dir">New Folder</string>
     <string name="wrong_dir">You don\'t have permission to write files in this directory</string>
     <string name="create_dir_title">Create Directory</string>
@@ -50,4 +50,9 @@
     <string name="delete_older_than_days">Delete records older than</string>
     <string name="delete_older_than_days_summary">Select 0 to disable</string>
     <string name="days">days</string>
+    <string name="excluded_numbers">Excluded Numbers</string>
+    <string name="excluded_numbers_summary">Add numbers that will be ignored while recording is enabled</string>
+    <string name="enter_number_to_exclude">Enter number to exclude</string>
+    <string name="add_text">Add</string>
+    <string name="number_alredy_in_list">Number alredy in list</string>
 </resources>

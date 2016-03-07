@@ -40,6 +40,9 @@
             android:name=".preference.DirChooserActivity"
             android:parentActivityName=".preference.SettingActivity"/>
 
+        <activity
+            android:name=".preference.ExcludedNumbersActivity"/>
+
         <activity android:name=".PassActivity"/>
 
         <activity android:name=".utils.SaveRecordDialogActivity"

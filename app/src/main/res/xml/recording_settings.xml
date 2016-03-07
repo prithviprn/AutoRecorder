@@ -47,4 +47,10 @@
         android:entryValues="@array/delete_older_than_days"
         android:defaultValue="0"
         android:summary="@string/delete_older_than_days_summary"/>
+
+    <Preference
+        android:title="@string/excluded_numbers"
+        android:key="excluded_numbers"
+        android:summary="@string/excluded_numbers_summary"/>
+
 </PreferenceScreen>
