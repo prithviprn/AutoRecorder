@@ -8,10 +8,13 @@ import android.provider.ContactsContract;
 import android.support.v4.app.FragmentManager;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 
 import ua.moskovkin.autorecorder.R;
 import ua.moskovkin.autorecorder.fragments.CustomAudioPlayer;
+import ua.moskovkin.autorecorder.model.Record;
 
 public class Utils {
 
@@ -33,6 +36,11 @@ public class Utils {
 
     public static boolean isContactImageSet(String contactNumber, Context context) {
         return !getContactImage(contactNumber, context).equals("");
+    }
+
+    public static ArrayList<Record> sortRecordsByDate(ArrayList<Record> records) {
+        Collections.sort(records);
+        return records;
     }
 
     public static void playRecord(String path, boolean isInternalPlayer, FragmentManager fm, Context context) {

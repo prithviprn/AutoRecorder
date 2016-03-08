@@ -2,7 +2,9 @@ package ua.moskovkin.autorecorder.model;
 
 import java.util.UUID;
 
-public class Record {
+import ua.moskovkin.autorecorder.utils.Utils;
+
+public class Record implements Comparable<Record>{
     private UUID id;
     private String contactId;
     private String recordNumber;
@@ -139,5 +141,12 @@ public class Record {
 
     public void setInFavorite(int inFavorite) {
         this.inFavorite = inFavorite;
+    }
+
+    @Override
+    public int compareTo(Record another) {
+        long left = Utils.getCalendarFromFile(getRecordFileName().split("/")).getTimeInMillis();
+        long right = Utils.getCalendarFromFile(another.getRecordPath().split("/")).getTimeInMillis();
+        return (int) (left - right);
     }
 }

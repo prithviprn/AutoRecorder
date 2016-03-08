@@ -51,6 +51,7 @@ public class SplashScreen extends Activity{
         }
         dbHelper.addContactNumbersAndRecordsToDb(appFolder.getPath());
         dbHelper.deleteNonExistingRecords();
+        dbHelper.deleteEmptyContacts();
 
         int maxDays = Integer.parseInt(settings.getString(Constants.SETTING_DELETE_RECORDS_OLDER_THAN_KEY, "0"));
         if (maxDays != 0) {

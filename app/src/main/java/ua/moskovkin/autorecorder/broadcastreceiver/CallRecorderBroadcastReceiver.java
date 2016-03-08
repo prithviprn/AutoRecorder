@@ -24,13 +24,15 @@ public class CallRecorderBroadcastReceiver extends BroadcastReceiver {
         } else {
             number = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
         }
-        boolean isInExcludedList = dbHelper.isNumberInExcludedList(number);
-        boolean isInIncludedList = dbHelper.isNumberInIncludedList(number);
-        if (isRecordingOn && !isInExcludedList) {
-            startRecordingService(context, number);
-        } else if (!isRecordingOn && isInIncludedList) {
-            if (!isInExcludedList) {
+        if (number != null) {
+            boolean isInExcludedList = dbHelper.isNumberInExcludedList(number);
+            boolean isInIncludedList = dbHelper.isNumberInIncludedList(number);
+            if (isRecordingOn && !isInExcludedList) {
                 startRecordingService(context, number);
+            } else if (!isRecordingOn && isInIncludedList) {
+                if (!isInExcludedList) {
+                    startRecordingService(context, number);
+                }
             }
         }
     }

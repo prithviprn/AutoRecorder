@@ -124,6 +124,7 @@ public class DBHelper extends SQLiteOpenHelper {
             } while (corsor.moveToNext());
         }
         corsor.close();
+        db.close();
         return numbers;
     }
 
@@ -132,6 +133,7 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put(EX_NUMBER, number);
         db.insert(EXCLUDED_NUMBERS_TABLE, null, cv);
+        db.close();
     }
 
     public boolean isNumberInExcludedList(String number) {
@@ -159,6 +161,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String selection = EX_NUMBER + " =?";
         String[] selectionArgs = {number};
         db.delete(EXCLUDED_NUMBERS_TABLE, selection, selectionArgs);
+        db.close();
     }
 
     public ArrayList<String> getIncludedNumbers() {
@@ -180,6 +183,7 @@ public class DBHelper extends SQLiteOpenHelper {
             } while (corsor.moveToNext());
         }
         corsor.close();
+        db.close();
         return numbers;
     }
 
@@ -196,9 +200,11 @@ public class DBHelper extends SQLiteOpenHelper {
                 null);
         if (cursor.moveToFirst()) {
             cursor.close();
+            db.close();
             return true;
         } else {
             cursor.close();
+            db.close();
             return false;
         }
     }
@@ -208,6 +214,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String selection = INCL_NUMBER + " =?";
         String[] selectionArgs = {number};
         db.delete(INCLUDED_NUMBERS_TABLE, selection, selectionArgs);
+        db.close();
     }
 
     public void insertIncludedNumber(String number) {
@@ -215,6 +222,7 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put(INCL_NUMBER, number);
         db.insert(INCLUDED_NUMBERS_TABLE, null, cv);
+        db.close();
     }
 
     public void addContactNumbersAndRecordsToDb(String path) {
@@ -334,6 +342,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String selection = RF_UUID + " =?";
         String[] selectionArgs = {String.valueOf(record.getId())};
         db.update(RECORDS_TABLE_NAME, cv, selection, selectionArgs);
+        db.close();
     }
 
     public void deleteNonExistingRecords() {
@@ -349,6 +358,27 @@ public class DBHelper extends SQLiteOpenHelper {
             }
         }
         db.close();
+    }
+
+    public void deleteEmptyContacts() {
+        ArrayList<Contact> contacts = getAllContacts();
+        SQLiteDatabase db = getWritableDatabase();
+        for (Contact contact : contacts) {
+            String selection = RF_UUID_CONTACT + " =?";
+            String[] selectionArgs = {String.valueOf(contact.getId())};
+            Cursor cursor = db.query(RECORDS_TABLE_NAME,
+                                                    null,
+                                                    selection,
+                                                    selectionArgs,
+                                                    null,
+                                                    null,
+                                                    null);
+            if (!cursor.moveToFirst()) {
+                String selectionC = CF_UUID + " =?";
+                db.delete(CONTACTS_TABLE_NAME, selectionC, selectionArgs);
+            }
+            cursor.close();
+        }
     }
 
     public void deleteRecordsOlderThan(Calendar date, int maxDays) {
@@ -393,6 +423,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 records.add(constructRecord(corsor));
             } while (corsor.moveToNext());
         }
+        Utils.sortRecordsByDate(records);
         return records;
     }
 
@@ -428,6 +459,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 records.add(record);
             } while (cursor.moveToNext());
         }
+        Utils.sortRecordsByDate(records);
         return records;
     }
 
@@ -452,6 +484,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 records.add(record);
             } while (corsor.moveToNext());
         }
+        Utils.sortRecordsByDate(records);
         return records;
     }
 
@@ -476,6 +509,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 records.add(record);
             } while (corsor.moveToNext());
         }
+        Utils.sortRecordsByDate(records);
         return records;
     }
 
