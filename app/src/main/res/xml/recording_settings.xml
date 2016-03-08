@@ -53,4 +53,9 @@
         android:key="excluded_numbers"
         android:summary="@string/excluded_numbers_summary"/>
 
+    <Preference
+        android:title="@string/included_numbers"
+        android:key="included_numbers"
+        android:summary="@string/included_numbers_summary"/>
+
 </PreferenceScreen>

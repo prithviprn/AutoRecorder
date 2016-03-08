@@ -55,4 +55,6 @@
     <string name="enter_number_to_exclude">Enter number to exclude</string>
     <string name="add_text">Add</string>
     <string name="number_alredy_in_list">Number alredy in list</string>
+    <string name="included_numbers">Included numbers</string>
+    <string name="included_numbers_summary">Calls from or to numbers in this list will be always recorded,  except numbers in excluded list</string>
 </resources>

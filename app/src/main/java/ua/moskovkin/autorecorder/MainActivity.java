@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -17,11 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
-
-import java.io.File;
-import java.util.GregorianCalendar;
 
 import ua.moskovkin.autorecorder.fragments.RecorderFragment;
 import ua.moskovkin.autorecorder.fragments.RecorderListFragment;
@@ -30,8 +25,6 @@ import ua.moskovkin.autorecorder.preference.SettingActivity;
 import ua.moskovkin.autorecorder.utils.DBHelper;
 
 public class MainActivity extends SingleFragmentActivity implements RecorderListFragment.Callbacks {
-    private final static int PASS_REQUEST = 12;
-    private File appFolder;
     private Toolbar toolbar;
     private ToggleButton mToggleButton;
     private TextView mToggleStatusTextView;
@@ -51,40 +44,10 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
         context = this;
 
         settings = PreferenceManager.getDefaultSharedPreferences(this);
-        if (settings.getBoolean(Constants.SETTING_PASS_PROTECTION_KEY, false)) {
-            Intent i = new Intent(this, PassActivity.class);
-            startActivityForResult(i, PASS_REQUEST);
-        }
-        if (settings.getString(Constants.SETTING_APP_SAVE_PATH_KEY, "empty").equals("empty")) {
-            if (Environment.getExternalStorageState().equals(Environment.MEDIA_UNMOUNTED)) {
-                settings.edit().putString(Constants.SETTING_APP_SAVE_PATH_KEY, Environment
-                        .getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
-                        + File.separator + getString(R.string.app_name)).apply();
-            } else {
-                settings.edit().putString(Constants.SETTING_APP_SAVE_PATH_KEY, Environment
-                        .getExternalStorageDirectory().getAbsolutePath()
-                        + File.separator + getString(R.string.app_name)).apply();
-            }
-        }
+
         fm = getSupportFragmentManager();
-        appFolder = new File(settings.getString(Constants.SETTING_APP_SAVE_PATH_KEY,
-                Environment.getExternalStorageDirectory().getAbsolutePath()
-                        + File.separator + getString(R.string.app_name)));
-        if(!appFolder.exists()) {
-            try {
-                appFolder.mkdirs();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
 
         dbHelper = new DBHelper(context);
-        dbHelper.addContactNumbersAndRecordsToDb(appFolder.getPath());
-
-        int maxDays = Integer.parseInt(settings.getString(Constants.SETTING_DELETE_RECORDS_OLDER_THAN_KEY, "0"));
-        if (maxDays != 0) {
-            dbHelper.deleteRecordsOlderThan(GregorianCalendar.getInstance(), maxDays);
-        }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_menu);
@@ -159,22 +122,14 @@ public class MainActivity extends SingleFragmentActivity implements RecorderList
             mToggleStatusTextView.setText(R.string.disabled);
         }
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && requestCode == PASS_REQUEST) {
-            Toast.makeText(this, R.string.access_granted, Toast.LENGTH_SHORT).show();
-        } else {
-           finish();
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 
     @Override
     protected Fragment createFragment() {
-        UniversalFragment fragment = UniversalFragment.newInstance(UniversalFragment.ALL_RECORDS_FRAGMENT);
-        return fragment;
+        return UniversalFragment.newInstance(UniversalFragment.ALL_RECORDS_FRAGMENT);
     }
 
     @Override

@@ -27,7 +27,7 @@ import java.util.Set;
 import ua.moskovkin.autorecorder.R;
 import ua.moskovkin.autorecorder.utils.DBHelper;
 
-public class ExcludedNumbersActivity extends AppCompatActivity{
+public class IncludedNumbersActivity extends AppCompatActivity{
     private static final int PICK_CONTACT_REQUEST = 1;
     private Toolbar toolbar;
     private EditText numberEditText;
@@ -51,7 +51,7 @@ public class ExcludedNumbersActivity extends AppCompatActivity{
         dbHelper = new DBHelper(this);
 
         numbers = new ArrayList<>();
-        numbers = dbHelper.getExcludedNumbers();
+        numbers = dbHelper.getIncludedNumbers();
 
         numberEditText = (EditText) findViewById(R.id.add_filter_number_edit_text);
         addButton = (Button) findViewById(R.id.addButton);
@@ -135,7 +135,7 @@ public class ExcludedNumbersActivity extends AppCompatActivity{
             Set<String> set = new HashSet<>(numbers);
             if (set.add(number)) {
                 numbers.add(number);
-                dbHelper.insertExcludedNumber(number);
+                dbHelper.insertIncludedNumber(number);
                 notifyDataSetChanged();
             } else {
                 Toast.makeText(context, context.getString(R.string.number_alredy_in_list), Toast.LENGTH_SHORT).show();
@@ -144,7 +144,7 @@ public class ExcludedNumbersActivity extends AppCompatActivity{
 
         public void remove(String number) {
             numbers.remove(number);
-            dbHelper.removeExcludedNumber(number);
+            dbHelper.removeIncludedNumber(number);
             notifyDataSetChanged();
         }
 
@@ -169,8 +169,8 @@ public class ExcludedNumbersActivity extends AppCompatActivity{
             if (view == null) {
                 view = inflater.inflate(R.layout.filter_list_item, parent, false);
             }
-            String excludedNumber = numbers.get(position);
-            ((TextView) view.findViewById(R.id.filter_text_view)).setText(excludedNumber);
+            String includedNumber = numbers.get(position);
+            ((TextView) view.findViewById(R.id.filter_text_view)).setText(includedNumber);
             view.findViewById(R.id.delete_filter_number_image_view).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

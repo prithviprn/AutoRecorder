@@ -12,7 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="5648644648"
-            android:id="@+id/excluded_text_view"
+            android:id="@+id/filter_text_view"
             android:textSize="30sp"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
@@ -23,7 +23,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/delete_excluded_number_image_view"
+            android:id="@+id/delete_filter_number_image_view"
             android:src="@drawable/ic_delete"
             android:layout_gravity="center_vertical"
             android:layout_weight="4"

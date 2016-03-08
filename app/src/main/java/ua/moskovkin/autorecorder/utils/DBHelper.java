@@ -51,6 +51,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String EXCLUDED_NUMBERS_TABLE = "excluded_numbers";
     public static final String EX_ID = "id";
     public static final String EX_NUMBER = "number";
+    public static final String INCLUDED_NUMBERS_TABLE = "included_numbers";
+    public static final String INCL_ID = "id";
+    public static final String INCL_NUMBER = "number";
     private Context context;
 
     public DBHelper(Context context) {
@@ -89,6 +92,11 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("create table " + EXCLUDED_NUMBERS_TABLE + " ("
                 + EX_ID + PRIMARY_KEY
                 + EX_NUMBER + TEXT_FIELD
+                + ");");
+
+        db.execSQL("create table " + INCLUDED_NUMBERS_TABLE + " ("
+                + INCL_ID + PRIMARY_KEY
+                + INCL_NUMBER + TEXT_FIELD
                 + ");");
     }
 
@@ -151,6 +159,62 @@ public class DBHelper extends SQLiteOpenHelper {
         String selection = EX_NUMBER + " =?";
         String[] selectionArgs = {number};
         db.delete(EXCLUDED_NUMBERS_TABLE, selection, selectionArgs);
+    }
+
+    public ArrayList<String> getIncludedNumbers() {
+        SQLiteDatabase db = getReadableDatabase();
+        ArrayList<String> numbers = new ArrayList<>();
+        Cursor corsor = db.query(
+                INCLUDED_NUMBERS_TABLE,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+
+        if (corsor.getCount() > 0) {
+            corsor.moveToFirst();
+            do {
+                numbers.add(corsor.getString(corsor.getColumnIndex(INCL_NUMBER)));
+            } while (corsor.moveToNext());
+        }
+        corsor.close();
+        return numbers;
+    }
+
+    public boolean isNumberInIncludedList(String number) {
+        SQLiteDatabase db = getWritableDatabase();
+        String selection = INCL_NUMBER + " =?";
+        String[] selectionArgs = {number};
+        Cursor cursor = db.query(INCLUDED_NUMBERS_TABLE,
+                null,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null);
+        if (cursor.moveToFirst()) {
+            cursor.close();
+            return true;
+        } else {
+            cursor.close();
+            return false;
+        }
+    }
+
+    public void removeIncludedNumber(String number) {
+        SQLiteDatabase db = getWritableDatabase();
+        String selection = INCL_NUMBER + " =?";
+        String[] selectionArgs = {number};
+        db.delete(INCLUDED_NUMBERS_TABLE, selection, selectionArgs);
+    }
+
+    public void insertIncludedNumber(String number) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(INCL_NUMBER, number);
+        db.insert(INCLUDED_NUMBERS_TABLE, null, cv);
     }
 
     public void addContactNumbersAndRecordsToDb(String path) {
@@ -222,7 +286,13 @@ public class DBHelper extends SQLiteOpenHelper {
             isIncoming = 1;
         }
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        mmr.setDataSource(file.getPath());
+        try {
+            mmr.setDataSource(file.getPath());
+        } catch (Exception e) {
+            e.printStackTrace();
+            file.delete();
+            return;
+        }
         long duration = Long.parseLong(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)) / 1000;
         int hours = (int) (duration / 3600);
         int minutes = (int) ((duration / 60) - (hours * 60));
@@ -264,6 +334,21 @@ public class DBHelper extends SQLiteOpenHelper {
         String selection = RF_UUID + " =?";
         String[] selectionArgs = {String.valueOf(record.getId())};
         db.update(RECORDS_TABLE_NAME, cv, selection, selectionArgs);
+    }
+
+    public void deleteNonExistingRecords() {
+        ArrayList<Record> records = getAllRecords();
+        SQLiteDatabase db = getWritableDatabase();
+
+        for (Record record : records) {
+            File file = new File(record.getRecordPath());
+            if (!file.exists()) {
+                String selection = RF_UUID + " =?";
+                String[] selectionArgs = {String.valueOf(record.getId())};
+                db.delete(RECORDS_TABLE_NAME, selection, selectionArgs);
+            }
+        }
+        db.close();
     }
 
     public void deleteRecordsOlderThan(Calendar date, int maxDays) {
@@ -436,7 +521,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public void insertContactImageUriToRecord(String recordPath, String contactNameImageUri) {
         SQLiteDatabase db = getReadableDatabase();
-        String[] selectionArgs = new String[] {recordPath};
+        String[] selectionArgs = new String[]{recordPath};
         ContentValues cv = new ContentValues();
         cv.put(RF_CONTACT_IMAGE_URI, contactNameImageUri);
 

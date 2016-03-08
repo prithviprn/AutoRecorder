@@ -26,6 +26,7 @@ import ua.moskovkin.autorecorder.utils.DBHelper;
 public class SettingFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final int DIR_CHOSEN = 1;
     private static final int ADD_EXCLUDED_NUMBERS = 2;
+    private static final int ADD_INCLUDED_NUMBERS = 3;
     private DBHelper dbHelper;
     private Preference dirPreference;
     private Preference askForPinPreference;
@@ -33,6 +34,7 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
     private ListPreference minDurationPreference;
     private ListPreference maxValidDatePreference;
     private Preference excludedNumbersPreference;
+    private Preference includedNumbersPreference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -130,6 +132,16 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
                     return true;
                 }
             });
+            includedNumbersPreference = findPreference(Constants.SETTING_INCLUDED_NUMBERS_KEY);
+            includedNumbersPreference.setTitle(getString(R.string.included_numbers) + " ("
+                    + dbHelper.getIncludedNumbers().size() + ")");
+            includedNumbersPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    startActivityForResult(new Intent(getActivity(), IncludedNumbersActivity.class), ADD_INCLUDED_NUMBERS);
+                    return true;
+                }
+            });
 
         } else if ("cloud".equals(settings)) {
             addPreferencesFromResource(R.xml.cloud_settings);
@@ -145,6 +157,9 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         }else if (requestCode == ADD_EXCLUDED_NUMBERS) {
             excludedNumbersPreference.setTitle(getString(R.string.excluded_numbers) + " ("
                                             + dbHelper.getExcludedNumbers().size() + ")");
+        } else if (requestCode == ADD_INCLUDED_NUMBERS) {
+            includedNumbersPreference.setTitle(getString(R.string.included_numbers) + " ("
+                    + dbHelper.getIncludedNumbers().size() + ")");
         }
     }
 

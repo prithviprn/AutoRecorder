@@ -49,6 +49,7 @@ public class RecorderPhoneStateListener extends PhoneStateListener {
             callingNumber = intent.getStringExtra("NUMBER");
         } catch (NullPointerException e) {
             e.printStackTrace();
+            context.stopService(new Intent(context, CallRecorderService.class));
         }
         switch (state) {
             //when incoming call

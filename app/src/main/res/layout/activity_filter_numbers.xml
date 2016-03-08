@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:inputType="number"
             android:ems="10"
-            android:id="@+id/add_excluded_number_edit_text"
+            android:id="@+id/add_filter_number_edit_text"
             android:layout_weight="1"
             android:hint="@string/enter_number_to_exclude"
             android:textSize="20sp" />
@@ -37,7 +37,7 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/excluded_numbers_list_view" />
+        android:id="@+id/filter_numbers_list_view" />
 
 
 </LinearLayout>

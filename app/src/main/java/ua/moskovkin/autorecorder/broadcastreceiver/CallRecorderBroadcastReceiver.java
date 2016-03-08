@@ -12,23 +12,26 @@ import ua.moskovkin.autorecorder.service.CallRecorderService;
 import ua.moskovkin.autorecorder.utils.DBHelper;
 
 public class CallRecorderBroadcastReceiver extends BroadcastReceiver {
-    private SharedPreferences setting;
-    private DBHelper dbHelper;
 
     @Override
     public void onReceive(final Context context, Intent intent) {
-        setting = PreferenceManager.getDefaultSharedPreferences(context);
-        dbHelper = new DBHelper(context);
+        SharedPreferences setting = PreferenceManager.getDefaultSharedPreferences(context);
+        DBHelper dbHelper = new DBHelper(context);
+        boolean isRecordingOn = setting.getBoolean(Constants.IS_RECORDING_ON, false);
         String number;
         if (intent.getAction().equals("android.intent.action.NEW_OUTGOING_CALL")) {
             number = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
         } else {
             number = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
         }
-        if (setting.getBoolean(Constants.IS_RECORDING_ON, false)) {
+        boolean isInExcludedList = dbHelper.isNumberInExcludedList(number);
+        boolean isInIncludedList = dbHelper.isNumberInIncludedList(number);
+        if (isRecordingOn && !isInExcludedList) {
             startRecordingService(context, number);
-        } else if (dbHelper.isNumberInExcludedList(number)) {
-            startRecordingService(context, number);
+        } else if (!isRecordingOn && isInIncludedList) {
+            if (!isInExcludedList) {
+                startRecordingService(context, number);
+            }
         }
     }
 

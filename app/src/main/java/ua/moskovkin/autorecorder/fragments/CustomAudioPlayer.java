@@ -118,7 +118,7 @@ public class CustomAudioPlayer extends Fragment {
 
     public String milliSecondsToTimer(long milliseconds){
         String finalTimerString = "";
-        String secondsString = "";
+        String secondsString;
 
         // Convert total duration into time
         int hours = (int)( milliseconds / (1000*60*60));
