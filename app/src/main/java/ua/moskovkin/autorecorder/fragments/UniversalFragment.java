@@ -1,6 +1,9 @@
 package ua.moskovkin.autorecorder.fragments;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -13,6 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+import com.google.android.gms.ads.doubleclick.PublisherAdView;
 
 import java.util.ArrayList;
 
@@ -94,6 +100,73 @@ public class UniversalFragment extends Fragment {
         }
     }
 
+    private class RecorderAdapter extends RecyclerView.Adapter<RecorderHolder> {
+        private static final int CONTENT_HOLDER = 1;
+        private static final int AD_HOLDER = 2;
+        private ArrayList<Record> records = new ArrayList<>();
+        private boolean isConnected;
+
+        private RecorderAdapter(ArrayList<Record> records) {
+            this.records = records;
+            isConnected = isOnline();
+        }
+
+        @Override
+        public RecorderHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            RecorderHolder holder;
+            View view;
+            if (viewType == AD_HOLDER) {
+                LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+                view = layoutInflater.inflate(R.layout.ad_list_item, parent, false);
+
+                holder = new RecorderHolder(view);
+            } else {
+                LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+                view = layoutInflater.inflate(R.layout.all_recorder_item, parent, false);
+                holder = new RecorderHolder(view);
+            }
+
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(RecorderHolder holder, int position) {
+            if (holder.getItemViewType() == CONTENT_HOLDER) {
+                holder.bindRecorderItem(records.get(position));
+            } else {
+                holder.bindAdItem();
+            }
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (position % 10 == 0 && isConnected)
+                return AD_HOLDER;
+            return CONTENT_HOLDER;
+        }
+
+        @Override
+        public int getItemCount() {
+            return records.size();
+        }
+
+        public void setRecordList(ArrayList<Record> records) {
+            this.records = records;
+        }
+
+        public void deleteRecord(Record record) {
+            records.remove(record);
+            notifyDataSetChanged();
+        }
+
+        public boolean isOnline() {
+            ConnectivityManager cm =
+                    (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = cm.getActiveNetworkInfo();
+            return netInfo != null && netInfo.isConnectedOrConnecting();
+        }
+    }
+
     private class RecorderHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mTitleTextView;
         private TextView mDateTextView;
@@ -102,19 +175,25 @@ public class UniversalFragment extends Fragment {
         private ImageView mContactImage;
         private ImageView mCallState;
         private ImageView mIsFavorite;
+        private ImageView mDeleteRecord;
         private Record record;
+        private PublisherAdView adView;
 
         public RecorderHolder(View itemView) {
             super(itemView);
-
-            itemView.setOnClickListener(this);
-            mTitleTextView = (TextView) itemView.findViewById(R.id.recorder_list_item);
-            mDateTextView = (TextView) itemView.findViewById(R.id.date_text_view);
-            mDurationTextView = (TextView) itemView.findViewById(R.id.duration_text_view);
-            mContactImage = (ImageView) itemView.findViewById(R.id.contact_image_view);
-            mCallState = (ImageView) itemView.findViewById(R.id.call_state_icon);
-            mFileSIzeTextView = (TextView) itemView.findViewById(R.id.file_size_text_view);
-            mIsFavorite = (ImageView) itemView.findViewById(R.id.is_favorite);
+            if (itemView.findViewById(R.id.publisherAdView) != null) {
+                adView = (PublisherAdView) itemView.findViewById(R.id.publisherAdView);
+            } else {
+                itemView.setOnClickListener(this);
+                mTitleTextView = (TextView) itemView.findViewById(R.id.recorder_list_item);
+                mDateTextView = (TextView) itemView.findViewById(R.id.date_text_view);
+                mDurationTextView = (TextView) itemView.findViewById(R.id.duration_text_view);
+                mContactImage = (ImageView) itemView.findViewById(R.id.contact_image_view);
+                mCallState = (ImageView) itemView.findViewById(R.id.call_state_icon);
+                mFileSIzeTextView = (TextView) itemView.findViewById(R.id.file_size_text_view);
+                mIsFavorite = (ImageView) itemView.findViewById(R.id.is_favorite);
+                mDeleteRecord = (ImageView) itemView.findViewById(R.id.delete_record_image_view);
+            }
         }
 
         public void bindRecorderItem(final Record record) {
@@ -137,9 +216,9 @@ public class UniversalFragment extends Fragment {
             mDateTextView.setText(record.getDate());
 
             mDurationTextView.setText(String.format("%02d:%02d:%02d",
-                                                                    record.getHours(),
-                                                                    record.getMinutes(),
-                                                                    record.getSeconds()));
+                    record.getHours(),
+                    record.getMinutes(),
+                    record.getSeconds()));
 
             if (record.isIncoming() == 1) {
                 mCallState.setImageResource(android.R.drawable.sym_call_incoming);
@@ -167,42 +246,25 @@ public class UniversalFragment extends Fragment {
             } else {
                 mIsFavorite.setImageResource(R.mipmap.ic_star_black);
             }
+            mDeleteRecord.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dbHelper.deleteRecord(record);
+                    Utils.deleteRecord(record);
+                    mAdapter.deleteRecord(record);
+                }
+            });
+        }
+
+        public void bindAdItem() {
+            PublisherAdRequest adRequest = new PublisherAdRequest.Builder().build();
+            adView.loadAd(adRequest);
         }
 
         @Override
         public void onClick(View v) {
             Utils.playRecord(record.getRecordPath(), settings.getBoolean(Constants.SETTING_INTERNAL_PLAYER_KEY, true),
                     getActivity().getSupportFragmentManager(), getActivity());
-        }
-    }
-
-    private class RecorderAdapter extends RecyclerView.Adapter<RecorderHolder> {
-        private ArrayList<Record> records = new ArrayList<>();
-
-        private RecorderAdapter(ArrayList<Record> records) {
-            this.records = records;
-        }
-
-        @Override
-        public RecorderHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(R.layout.all_recorder_item, parent, false);
-
-            return new RecorderHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(RecorderHolder holder, int position) {
-            holder.bindRecorderItem(records.get(position));
-        }
-
-        @Override
-        public int getItemCount() {
-            return records.size();
-        }
-
-        public void setRecordList(ArrayList<Record> records) {
-            this.records = records;
         }
     }
 }

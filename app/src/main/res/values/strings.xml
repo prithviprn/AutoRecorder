@@ -59,4 +59,6 @@
     <string name="included_numbers_summary">Calls from or to numbers in this list will be always recorded,  except numbers in excluded list</string>
     <string name="company_logo">Company Logo</string>
     <string name="company_name">MoskovDroid</string>
+
+    <string name="banner_ad_unit_id">/6499/example/banner</string>
 </resources>

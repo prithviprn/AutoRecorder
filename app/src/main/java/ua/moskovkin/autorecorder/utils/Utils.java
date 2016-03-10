@@ -8,6 +8,7 @@ import android.provider.ContactsContract;
 import android.support.v4.app.FragmentManager;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.GregorianCalendar;
@@ -98,5 +99,10 @@ public class Utils {
         cursor.close();
 
         return contactImageUri;
+    }
+
+    public static void deleteRecord(Record record) {
+        File file = new File(record.getRecordPath());
+        file.delete();
     }
 }

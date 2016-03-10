@@ -345,6 +345,14 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void deleteRecord(Record record) {
+        SQLiteDatabase db = getWritableDatabase();
+        String selection = RF_UUID + " =?";
+        String[] selectionArgs = {String.valueOf(record.getId())};
+        db.delete(RECORDS_TABLE_NAME, selection, selectionArgs);
+        db.close();
+    }
+
     public void deleteNonExistingRecords() {
         ArrayList<Record> records = getAllRecords();
         SQLiteDatabase db = getWritableDatabase();

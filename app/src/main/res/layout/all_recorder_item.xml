@@ -77,12 +77,25 @@
             android:orientation="vertical"
             android:layout_weight="1.4">
 
-            <ImageView
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:src="@mipmap/ic_star_border"
-                android:layout_gravity="right"
-                android:id="@+id/is_favorite" />
+                android:layout_gravity="right">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@mipmap/ic_star_border"
+                    android:id="@+id/is_favorite" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/delete_record_image_view"
+                    android:src="@drawable/ic_delete"
+                    android:layout_marginLeft="5dp" />
+            </LinearLayout>
 
             <TextView
                 android:layout_width="match_parent"
